@@ -1,0 +1,656 @@
+[
+  {
+    "id": "nasi_goreng",
+    "name": "Nasi goreng",
+    "aliases": [
+      "nasi goreng",
+      "nasgor",
+      "nasi goreng kampung"
+    ],
+    "category": "makanan utama",
+    "default_serving": {
+      "label": "1 piring",
+      "grams": 250
+    },
+    "ingredients": [
+      {
+        "food_id": "rice_white_cooked",
+        "grams": 200
+      },
+      {
+        "food_id": "egg_chicken",
+        "grams": 50
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 10
+      },
+      {
+        "food_id": "sweet_soy_sauce",
+        "grams": 15
+      },
+      {
+        "food_id": "shallot",
+        "grams": 10
+      },
+      {
+        "food_id": "garlic",
+        "grams": 5
+      }
+    ],
+    "confidence": "low",
+    "note": "Resep dasar; minyak, kecap, topping dan ukuran porsi sangat bervariasi."
+  },
+  {
+    "id": "tempe_goreng",
+    "name": "Tempe goreng",
+    "aliases": [
+      "tempe goreng"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "2 potong",
+      "grams": 50
+    },
+    "ingredients": [
+      {
+        "food_id": "tempe",
+        "grams": 45
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 8
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.5
+      }
+    ],
+    "confidence": "low",
+    "note": "Penyerapan minyak berbeda menurut teknik menggoreng."
+  },
+  {
+    "id": "tahu_goreng",
+    "name": "Tahu goreng",
+    "aliases": [
+      "tahu goreng"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "2 potong",
+      "grams": 50
+    },
+    "ingredients": [
+      {
+        "food_id": "tofu",
+        "grams": 45
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 8
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.3
+      }
+    ],
+    "confidence": "low",
+    "note": "Ukuran tahu dan penyerapan minyak bervariasi."
+  },
+  {
+    "id": "telur_dadar",
+    "name": "Telur dadar",
+    "aliases": [
+      "telur dadar",
+      "dadar telur"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "1 porsi",
+      "grams": 60
+    },
+    "ingredients": [
+      {
+        "food_id": "egg_chicken",
+        "grams": 55
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 5
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.5
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "telur_rebus",
+    "name": "Telur rebus",
+    "aliases": [
+      "telur rebus"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "1 butir",
+      "grams": 50
+    },
+    "ingredients": [
+      {
+        "food_id": "egg_chicken",
+        "grams": 50
+      }
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "ayam_goreng",
+    "name": "Ayam goreng",
+    "aliases": [
+      "ayam goreng"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "1 potong",
+      "grams": 100
+    },
+    "ingredients": [
+      {
+        "food_id": "chicken_meat",
+        "grams": 90
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 10
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.7
+      }
+    ],
+    "confidence": "low",
+    "note": "Belum memodelkan tepung/coating; cocok sebagai baseline, bukan nilai laboratorium."
+  },
+  {
+    "id": "ayam_bakar",
+    "name": "Ayam bakar",
+    "aliases": [
+      "ayam bakar"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "1 potong",
+      "grams": 100
+    },
+    "ingredients": [
+      {
+        "food_id": "chicken_meat",
+        "grams": 90
+      },
+      {
+        "food_id": "sweet_soy_sauce",
+        "grams": 10
+      },
+      {
+        "food_id": "shallot",
+        "grams": 5
+      },
+      {
+        "food_id": "garlic",
+        "grams": 3
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "sate_ayam",
+    "name": "Sate ayam",
+    "aliases": [
+      "sate ayam"
+    ],
+    "category": "lauk",
+    "default_serving": {
+      "label": "5 tusuk",
+      "grams": 100
+    },
+    "ingredients": [
+      {
+        "food_id": "chicken_meat",
+        "grams": 80
+      },
+      {
+        "food_id": "peanut",
+        "grams": 15
+      },
+      {
+        "food_id": "sweet_soy_sauce",
+        "grams": 5
+      }
+    ],
+    "confidence": "low",
+    "note": "Saus kacang dan ukuran tusuk sangat bervariasi."
+  },
+  {
+    "id": "gado_gado",
+    "name": "Gado-gado",
+    "aliases": [
+      "gado-gado",
+      "gado gado"
+    ],
+    "category": "makanan utama",
+    "default_serving": {
+      "label": "1 porsi",
+      "grams": 300
+    },
+    "ingredients": [
+      {
+        "food_id": "bean_sprout",
+        "grams": 50
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 50
+      },
+      {
+        "food_id": "long_beans",
+        "grams": 40
+      },
+      {
+        "food_id": "tofu",
+        "grams": 50
+      },
+      {
+        "food_id": "tempe",
+        "grams": 30
+      },
+      {
+        "food_id": "peanut",
+        "grams": 35
+      }
+    ],
+    "confidence": "low",
+    "note": "Belum memasukkan seluruh komponen regional; saus kacang sangat menentukan energi."
+  },
+  {
+    "id": "pecel",
+    "name": "Pecel",
+    "aliases": [
+      "pecel"
+    ],
+    "category": "makanan utama",
+    "default_serving": {
+      "label": "1 porsi",
+      "grams": 280
+    },
+    "ingredients": [
+      {
+        "food_id": "water_spinach",
+        "grams": 60
+      },
+      {
+        "food_id": "bean_sprout",
+        "grams": 50
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 40
+      },
+      {
+        "food_id": "peanut",
+        "grams": 35
+      },
+      {
+        "food_id": "sweet_soy_sauce",
+        "grams": 5
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "sayur_asem",
+    "name": "Sayur asem",
+    "aliases": [
+      "sayur asem",
+      "sayur asam"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 mangkuk",
+      "grams": 250
+    },
+    "ingredients": [
+      {
+        "food_id": "corn",
+        "grams": 50
+      },
+      {
+        "food_id": "long_beans",
+        "grams": 30
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 30
+      },
+      {
+        "food_id": "tomato",
+        "grams": 20
+      },
+      {
+        "food_id": "shallot",
+        "grams": 10
+      },
+      {
+        "food_id": "garlic",
+        "grams": 5
+      },
+      {
+        "food_id": "salt",
+        "grams": 1
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "rawon",
+    "name": "Rawon",
+    "aliases": [
+      "rawon"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 mangkuk",
+      "grams": 350
+    },
+    "ingredients": [
+      {
+        "food_id": "beef",
+        "grams": 80
+      },
+      {
+        "food_id": "shallot",
+        "grams": 15
+      },
+      {
+        "food_id": "garlic",
+        "grams": 8
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 8
+      },
+      {
+        "food_id": "salt",
+        "grams": 1
+      }
+    ],
+    "confidence": "low",
+    "note": "Belum memasukkan kluwek dan seluruh bumbu khas; perlu resep regional yang lebih rinci."
+  },
+  {
+    "id": "rendang",
+    "name": "Rendang sapi",
+    "aliases": [
+      "rendang",
+      "rendang sapi"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 porsi",
+      "grams": 100
+    },
+    "ingredients": [
+      {
+        "food_id": "beef",
+        "grams": 65
+      },
+      {
+        "food_id": "coconut_milk",
+        "grams": 25
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 5
+      },
+      {
+        "food_id": "shallot",
+        "grams": 5
+      },
+      {
+        "food_id": "garlic",
+        "grams": 3
+      },
+      {
+        "food_id": "red_chili",
+        "grams": 3
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.8
+      }
+    ],
+    "confidence": "low",
+    "note": "Resep autentik memiliki banyak bumbu dan variasi santan/minyak."
+  },
+  {
+    "id": "opor_ayam",
+    "name": "Opor ayam",
+    "aliases": [
+      "opor ayam",
+      "opor"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 porsi",
+      "grams": 250
+    },
+    "ingredients": [
+      {
+        "food_id": "chicken_meat",
+        "grams": 90
+      },
+      {
+        "food_id": "coconut_milk",
+        "grams": 60
+      },
+      {
+        "food_id": "shallot",
+        "grams": 10
+      },
+      {
+        "food_id": "garlic",
+        "grams": 5
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 5
+      },
+      {
+        "food_id": "salt",
+        "grams": 0.8
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "soto_ayam",
+    "name": "Soto ayam",
+    "aliases": [
+      "soto ayam",
+      "soto"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 mangkuk",
+      "grams": 350
+    },
+    "ingredients": [
+      {
+        "food_id": "chicken_meat",
+        "grams": 70
+      },
+      {
+        "food_id": "egg_chicken",
+        "grams": 25
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 30
+      },
+      {
+        "food_id": "bean_sprout",
+        "grams": 30
+      },
+      {
+        "food_id": "shallot",
+        "grams": 10
+      },
+      {
+        "food_id": "garlic",
+        "grams": 5
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 5
+      },
+      {
+        "food_id": "salt",
+        "grams": 1
+      }
+    ],
+    "confidence": "low",
+    "note": "Belum memasukkan bihun/nasi dan seluruh kuah; perlu varian resep."
+  },
+  {
+    "id": "mie_goreng",
+    "name": "Mi goreng",
+    "aliases": [
+      "mie goreng",
+      "mi goreng"
+    ],
+    "category": "makanan utama",
+    "default_serving": {
+      "label": "1 piring",
+      "grams": 250
+    },
+    "ingredients": [
+      {
+        "food_id": "wheat_flour",
+        "grams": 80
+      },
+      {
+        "food_id": "egg_chicken",
+        "grams": 30
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 10
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 30
+      },
+      {
+        "food_id": "sweet_soy_sauce",
+        "grams": 10
+      }
+    ],
+    "confidence": "low",
+    "note": "Ini pendekatan resep; untuk mi instan/produk kemasan gunakan barcode/produk."
+  },
+  {
+    "id": "bakso",
+    "name": "Bakso sapi",
+    "aliases": [
+      "bakso"
+    ],
+    "category": "masakan",
+    "default_serving": {
+      "label": "1 mangkuk",
+      "grams": 300
+    },
+    "ingredients": [
+      {
+        "food_id": "beef",
+        "grams": 80
+      },
+      {
+        "food_id": "wheat_flour",
+        "grams": 15
+      },
+      {
+        "food_id": "salt",
+        "grams": 1
+      },
+      {
+        "food_id": "cabbage",
+        "grams": 20
+      }
+    ],
+    "confidence": "low",
+    "note": "Belum memodelkan seluruh adonan, mie/bihun, saus dan kuah."
+  },
+  {
+    "id": "pisang_goreng",
+    "name": "Pisang goreng",
+    "aliases": [
+      "pisang goreng"
+    ],
+    "category": "camilan",
+    "default_serving": {
+      "label": "2 buah",
+      "grams": 100
+    },
+    "ingredients": [
+      {
+        "food_id": "banana",
+        "grams": 70
+      },
+      {
+        "food_id": "wheat_flour",
+        "grams": 25
+      },
+      {
+        "food_id": "cooking_oil",
+        "grams": 8
+      },
+      {
+        "food_id": "sugar",
+        "grams": 3
+      }
+    ],
+    "confidence": "low"
+  },
+  {
+    "id": "es_buah_sederhana",
+    "name": "Es buah sederhana",
+    "aliases": [
+      "es buah"
+    ],
+    "category": "minuman/makanan",
+    "default_serving": {
+      "label": "1 mangkuk",
+      "grams": 250
+    },
+    "ingredients": [
+      {
+        "food_id": "papaya",
+        "grams": 50
+      },
+      {
+        "food_id": "watermelon",
+        "grams": 50
+      },
+      {
+        "food_id": "banana",
+        "grams": 40
+      },
+      {
+        "food_id": "sugar",
+        "grams": 10
+      }
+    ],
+    "confidence": "low",
+    "note": "Santan, susu kental manis, sirup, dan topping belum dimasukkan."
+  }
+]

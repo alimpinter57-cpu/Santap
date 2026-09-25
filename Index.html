@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Santap — AI Nutrition & Activity Tracker</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#1F4D3A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Santap">
+<link rel="icon" href="./icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F6F1; --surface:#FFFFFF; --surface-2:#EAF1E7;
+    --ink:#16241C; --ink-soft:#57685C; --ink-faint:#8A988D;
+    --moss:#2F6E52; --moss-strong:#1F4D3A; --moss-tint:#E1EEE4;
+    --ochre:#C9812E; --ochre-tint:#F8ECD9;
+    --berry:#A24E68; --berry-tint:#F5E7EB;
+    --sky:#3E7EA6; --sky-tint:#E5F1F6;
+    --line:#DDE5DA;
+    --shadow: 0 1px 2px rgba(22,36,28,.07), 0 6px 20px -12px rgba(22,36,28,.18);
+    --r-s:10px; --r-m:16px; --r-l:24px;
+    --font-d:'Space Grotesk','Inter',sans-serif;
+    --font-b:'Inter',system-ui,-apple-system,sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#10160F; --surface:#182119; --surface-2:#1E2A22;
+      --ink:#EAF2EC; --ink-soft:#A6B6AB; --ink-faint:#6C7A70;
+      --moss:#63AE8B; --moss-strong:#8ED0AE; --moss-tint:#1D3327;
+      --ochre:#E3A75B; --ochre-tint:#2E2415;
+      --berry:#D08BA0; --berry-tint:#2E1E24;
+      --sky:#79B0CE; --sky-tint:#142631;
+      --line:#28352C;
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 6px 20px -12px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10160F; --surface:#182119; --surface-2:#1E2A22;
+    --ink:#EAF2EC; --ink-soft:#A6B6AB; --ink-faint:#6C7A70;
+    --moss:#63AE8B; --moss-strong:#8ED0AE; --moss-tint:#1D3327;
+    --ochre:#E3A75B; --ochre-tint:#2E2415;
+    --berry:#D08BA0; --berry-tint:#2E1E24;
+    --sky:#79B0CE; --sky-tint:#142631;
+    --line:#28352C;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 6px 20px -12px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--font-b);
+    -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+  }
+  h1,h2,h3{font-family:var(--font-d); margin:0; letter-spacing:-0.01em;}
+  p{margin:0;}
+  button{font-family:inherit; cursor:pointer;}
+  input,textarea,select{font-family:inherit; color:inherit;}
+  ::selection{background:var(--moss-tint);}
+  .icon{display:block; flex-shrink:0;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--moss); outline-offset:2px; border-radius:6px;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+  #app{min-height:100vh;}
+  .app-shell{
+    max-width:480px; margin:0 auto; min-height:100vh; position:relative;
+    display:flex; flex-direction:column; background:var(--paper);
+  }
+  .topbar{
+    padding:16px 18px 4px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .eyebrow{font-size:12.5px; color:var(--ink-faint); margin:0 0 2px;}
+  .greet h1{font-size:22px; font-weight:700;}
+  .icon-btn{
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--surface);
+    display:flex; align-items:center; justify-content:center; color:var(--moss-strong); box-shadow:var(--shadow);
+  }
+  .icon-btn:active{transform:scale(.94);}
+  .main-scroll{flex:1; overflow-y:auto; padding:6px 18px 110px; -webkit-overflow-scrolling:touch;}
+  .page{display:flex; flex-direction:column; gap:22px; animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+
+  .section-label{font-size:13px; font-weight:600; color:var(--ink-soft); text-transform:none;}
+  .section-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .link-btn{background:none; border:none; color:var(--moss-strong); font-size:13px; font-weight:600; padding:4px;}
+  .text-btn{background:none; border:none; color:var(--moss-strong); font-size:13.5px; font-weight:600; padding:2px 0; align-self:flex-start;}
+
+  .hero-card{
+    background:var(--surface); border-radius:var(--r-l); padding:20px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .hero-top{display:flex; align-items:center; gap:16px;}
+  .rings{position:relative; width:96px; height:96px; flex-shrink:0;}
+  .rings svg{width:100%; height:100%; transform:rotate(-90deg);}
+  .rings-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .rings-center strong{font-family:var(--font-d); font-size:20px; line-height:1;}
+  .rings-center span{font-size:10.5px; color:var(--ink-faint);}
+  .hero-stats{flex:1; display:flex; flex-direction:column; gap:8px;}
+  .hero-stat-row{display:flex; align-items:center; justify-content:space-between; font-size:13px;}
+  .hero-stat-row .dot{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:7px;}
+  .hero-stat-label{display:flex; align-items:center; color:var(--ink-soft);}
+  .hero-stat-val{font-weight:700; font-family:var(--font-d);}
+  .macro-bars{display:flex; flex-direction:column; gap:8px;}
+  .macro-row{display:grid; grid-template-columns:64px 1fr 40px; align-items:center; gap:8px; font-size:12px;}
+  .macro-track{height:6px; border-radius:4px; background:var(--surface-2); overflow:hidden;}
+  .macro-fill{height:100%; border-radius:4px;}
+
+  .cups{display:flex; gap:8px; flex-wrap:wrap;}
+  .cup-btn{
+    width:34px; height:34px; border-radius:50%; border:1.5px solid var(--sky); background:var(--sky-tint);
+    color:var(--sky); display:flex; align-items:center; justify-content:center;
+  }
+  .cup-btn.filled{background:var(--sky); color:#fff;}
+  .cup-btn.wide{width:auto; height:32px; border-radius:999px; padding:0 12px; font-size:12.5px; font-weight:600;}
+  .cup-btn.wide.ghost{background:transparent; border-style:dashed; color:var(--ink-faint); border-color:var(--line);}
+  .water-custom-row{display:flex; gap:8px; align-items:center;}
+  .water-custom-row .text-input{flex:1; margin-top:0;}
+  .hydration-row{display:flex; flex-direction:column; gap:10px;}
+  .hydration-top{display:flex; align-items:center; justify-content:space-between;}
+  .hydration-count{font-size:12.5px; color:var(--ink-soft);}
+
+  .timeline{display:flex; flex-direction:column;}
+  .tl-item{display:flex; gap:12px; padding-bottom:16px; position:relative;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-rail{display:flex; flex-direction:column; align-items:center; width:14px;}
+  .tl-dot{width:10px; height:10px; border-radius:50%; background:var(--moss); margin-top:4px; flex-shrink:0;}
+  .tl-line{flex:1; width:2px; background:var(--line); margin-top:2px;}
+  .tl-item:last-child .tl-line{display:none;}
+  .tl-body{flex:1; padding-bottom:2px;}
+  .tl-head{display:flex; align-items:baseline; justify-content:space-between; gap:8px; cursor:pointer;}
+  .tl-time{font-size:11.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+  .tl-slot{font-size:14.5px; font-weight:600;}
+  .tl-foods{font-size:13px; color:var(--ink-soft); margin-top:2px;}
+  .tl-kcal{font-size:12.5px; color:var(--ink-faint); font-family:var(--font-d);}
+  .tl-detail{margin-top:10px; background:var(--surface-2); border-radius:var(--r-s); padding:12px; display:flex; flex-direction:column; gap:8px;}
+  .tl-detail-item{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; gap:8px;}
+  .tl-detail-item .nm{font-weight:600;}
+  .tl-detail-item .meta{color:var(--ink-faint); font-size:11.5px;}
+  .badge{font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:20px; white-space:nowrap;}
+  .badge-high{background:var(--moss-tint); color:var(--moss-strong);}
+  .badge-medium{background:var(--ochre-tint); color:var(--ochre);}
+  .badge-low{background:var(--berry-tint); color:var(--berry);}
+  .badge-custom{background:var(--sky-tint); color:var(--sky);}
+  .tl-actions{display:flex; gap:8px; margin-top:2px;}
+  .mini-btn{font-size:12px; font-weight:600; border-radius:20px; padding:6px 12px; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft); display:flex; align-items:center; gap:5px;}
+  .mini-btn.danger{color:var(--berry); border-color:var(--berry-tint);}
+  .mini-btn.primary{color:var(--moss-strong); border-color:var(--moss-tint);}
+
+  .empty-note{font-size:13px; color:var(--ink-faint); background:var(--surface); border:1px dashed var(--line); border-radius:var(--r-m); padding:16px; text-align:center;}
+
+  .insight-card{background:var(--moss-tint); border-radius:var(--r-l); padding:16px 18px; display:flex; flex-direction:column; gap:8px;}
+  .insight-text{font-size:13.5px; color:var(--moss-strong); line-height:1.45;}
+
+  .quickadd-row{display:flex; gap:10px;}
+  .quick-chip{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 6px;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-m); font-size:12px; font-weight:600; color:var(--ink-soft); box-shadow:var(--shadow);
+  }
+  .quick-chip .icon{color:var(--moss-strong);}
+  .quick-chip:active{transform:scale(.96);}
+
+  .fab{
+    position:absolute; right:20px; bottom:92px; width:58px; height:58px; border-radius:50%;
+    background:var(--moss-strong); color:#fff; border:none; box-shadow:0 10px 24px -8px rgba(31,77,58,.55);
+    display:flex; align-items:center; justify-content:center; z-index:20;
+  }
+  .fab:active{transform:scale(.94);}
+
+  .bottomnav{
+    display:flex; border-top:1px solid var(--line); background:var(--surface);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom)); position:relative; z-index:15;
+  }
+  .nav-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 2px;
+    background:none; border:none; color:var(--ink-faint); font-size:10.5px; font-weight:600;
+  }
+  .nav-btn.active{color:var(--moss-strong);}
+
+  /* Cards / lists shared */
+  .card{background:var(--surface); border-radius:var(--r-m); padding:14px 16px; box-shadow:var(--shadow);}
+  .list-flat{display:flex; flex-direction:column; gap:10px;}
+  .row-between{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+
+  /* Favorites */
+  .fav-scroll{display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;}
+  .fav-chip{
+    flex-shrink:0; display:flex; align-items:center; gap:7px; background:var(--surface); border:1px solid var(--line);
+    border-radius:20px; padding:8px 14px; font-size:12.5px; font-weight:600; color:var(--ink-soft); box-shadow:var(--shadow);
+  }
+  .fav-chip .icon{color:var(--ochre);}
+
+  /* Tabs */
+  .tabs{display:flex; gap:6px; background:var(--surface-2); border-radius:20px; padding:4px;}
+  .tab-btn{flex:1; border:none; background:none; padding:8px 4px; border-radius:16px; font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+  .tab-btn.active{background:var(--surface); color:var(--moss-strong); box-shadow:var(--shadow);}
+
+  .searchbar{display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:10px 14px; box-shadow:var(--shadow);}
+  .searchbar input{flex:1; border:none; outline:none; background:none; font-size:14px; color:var(--ink);}
+  .searchbar .icon{color:var(--ink-faint);}
+
+  /* Activity */
+  .act-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .act-tile{
+    display:flex; flex-direction:column; align-items:center; gap:6px; padding:14px 4px; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--r-m); font-size:11.5px; font-weight:600; color:var(--ink-soft); box-shadow:var(--shadow);
+  }
+  .act-tile.selected{border-color:var(--moss); background:var(--moss-tint); color:var(--moss-strong);}
+  .act-tile .icon{color:var(--ochre);}
+  .act-tile.selected .icon{color:var(--moss-strong);}
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .dur-chip{padding:9px 16px; border-radius:20px; border:1px solid var(--line); background:var(--surface); font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .dur-chip.selected{background:var(--moss-strong); border-color:var(--moss-strong); color:#fff;}
+  .field-label{font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:8px; display:block;}
+  .field-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:10px 12px;}
+  .text-input, textarea.text-input{
+    width:100%; border:1px solid var(--line); border-radius:var(--r-s); padding:11px 13px; font-size:14px;
+    background:var(--surface); color:var(--ink); outline:none;
+  }
+  textarea.text-input{resize:vertical; min-height:64px;}
+  .btn-primary{
+    background:var(--moss-strong); color:#fff; border:none; border-radius:26px; padding:13px 20px; font-size:14.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+  }
+  .btn-primary:disabled{opacity:.45;}
+  .btn-secondary{
+    background:var(--surface); color:var(--ink-soft); border:1px solid var(--line); border-radius:26px; padding:12px 18px; font-size:13.5px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+  }
+
+  /* Insights */
+  .insight-metric{display:flex; align-items:center; gap:14px; background:var(--surface); border-radius:var(--r-m); padding:14px 16px; box-shadow:var(--shadow);}
+  .insight-arc{flex-shrink:0;}
+  .insight-metric h3{font-size:13.5px; margin-bottom:3px;}
+  .insight-metric p{font-size:12.5px; color:var(--ink-soft); line-height:1.4;}
+
+  /* Onboarding */
+  .onb-wrap{min-height:100vh; display:flex; flex-direction:column; max-width:480px; margin:0 auto; padding:28px 24px; background:var(--paper);}
+  .onb-dots{display:flex; gap:6px; margin-bottom:26px;}
+  .onb-dot{height:5px; flex:1; border-radius:3px; background:var(--surface-2);}
+  .onb-dot.done{background:var(--moss);}
+  .onb-body{flex:1; display:flex; flex-direction:column; gap:18px;}
+  .onb-emoji{font-size:44px;}
+  .onb-body h1{font-size:25px; margin-bottom:6px;}
+  .onb-body .sub{font-size:14px; color:var(--ink-soft); line-height:1.5;}
+  .chip-select{padding:10px 15px; border-radius:20px; border:1px solid var(--line); background:var(--surface); font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .chip-select.selected{background:var(--moss-strong); border-color:var(--moss-strong); color:#fff;}
+  .onb-actions{display:flex; gap:10px; padding-top:18px;}
+  .onb-skip{text-align:center; font-size:13px; color:var(--ink-faint); padding-top:14px; background:none; border:none; text-decoration:underline;}
+
+  /* Modal sheet */
+  .sheet-overlay{position:fixed; inset:0; background:rgba(16,22,15,.5); display:flex; align-items:flex-end; z-index:50; animation:fadeIn .2s ease;}
+  .sheet{
+    width:100%; max-width:480px; margin:0 auto; background:var(--paper); border-radius:24px 24px 0 0;
+    max-height:88vh; display:flex; flex-direction:column; box-shadow:0 -10px 40px rgba(0,0,0,.25);
+  }
+  .sheet-head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px 8px;}
+  .sheet-head h2{font-size:17px;}
+  .sheet-body{overflow-y:auto; padding:8px 18px 24px; display:flex; flex-direction:column; gap:16px;}
+  .sheet-handle{width:36px; height:4px; background:var(--line); border-radius:3px; margin:8px auto 0;}
+
+  .method-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  .method-tile{
+    display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px 8px; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--r-m); box-shadow:var(--shadow); font-size:13px; font-weight:600; color:var(--ink);
+  }
+  .method-tile .icon{color:var(--moss-strong); width:26px; height:26px;}
+  .method-tile.wide{grid-column:1 / -1; flex-direction:row; justify-content:center;}
+
+  .photo-preview{width:100%; border-radius:var(--r-m); overflow:hidden; background:var(--surface-2); aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;}
+  .photo-preview img{width:100%; height:100%; object-fit:cover;}
+  .quality-warn{display:flex; gap:10px; background:var(--ochre-tint); color:var(--ochre); border-radius:var(--r-s); padding:12px; font-size:12.5px; align-items:flex-start;}
+
+  .review-item{background:var(--surface); border-radius:var(--r-m); padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;}
+  .review-item-head{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .review-item-head .nm{font-size:14.5px; font-weight:700;}
+  .review-kcal{font-family:var(--font-d); font-size:13px; color:var(--ink-soft);}
+  .review-note{font-size:12px; color:var(--ink-faint); background:var(--surface-2); border-radius:8px; padding:8px 10px; line-height:1.4;}
+  .portion-chips{display:flex; gap:7px; flex-wrap:wrap;}
+  .portion-chip{padding:7px 13px; border-radius:16px; border:1px solid var(--line); background:var(--surface); font-size:12px; font-weight:600; color:var(--ink-soft);}
+  .portion-chip.selected{background:var(--moss-strong); border-color:var(--moss-strong); color:#fff;}
+  .portion-chip.suggested::after{content:" ★"; font-size:10px;}
+
+  .voice-circle{
+    width:110px; height:110px; border-radius:50%; margin:10px auto; background:var(--moss-tint); color:var(--moss-strong);
+    display:flex; align-items:center; justify-content:center; border:none;
+  }
+  .voice-circle.listening{background:var(--moss-strong); color:#fff; animation:pulseMic 1.4s ease-in-out infinite;}
+  @keyframes pulseMic{0%,100%{box-shadow:0 0 0 0 rgba(47,110,82,.35);} 50%{box-shadow:0 0 0 16px rgba(47,110,82,0);}}
+  .voice-status{text-align:center; font-size:13px; color:var(--ink-soft);}
+
+  .loading-row{display:flex; align-items:center; gap:10px; justify-content:center; padding:26px 10px; color:var(--ink-soft); font-size:13.5px;}
+  .spinner{width:20px; height:20px; border-radius:50%; border:2.5px solid var(--surface-2); border-top-color:var(--moss-strong); animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .barcode-result{display:flex; align-items:center; gap:12px; background:var(--surface); border-radius:var(--r-m); padding:14px; box-shadow:var(--shadow);}
+
+  /* Chat */
+  .chat-overlay{position:fixed; inset:0; background:var(--paper); z-index:60; display:flex; flex-direction:column; max-width:480px; margin:0 auto;}
+  .chat-head{display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line);}
+  .chat-body{flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; gap:12px;}
+  .bubble{max-width:82%; padding:11px 14px; border-radius:16px; font-size:13.5px; line-height:1.45;}
+  .bubble.user{align-self:flex-end; background:var(--moss-strong); color:#fff; border-bottom-right-radius:4px;}
+  .bubble.bot{align-self:flex-start; background:var(--surface); color:var(--ink); border-bottom-left-radius:4px; box-shadow:var(--shadow);}
+  .chat-suggestions{display:flex; gap:8px; overflow-x:auto; padding:0 16px 10px;}
+  .sugg-chip{flex-shrink:0; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:8px 13px; font-size:12px; color:var(--ink-soft); font-weight:600;}
+  .chat-inputrow{display:flex; gap:8px; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--surface);}
+  .chat-inputrow input{flex:1; border:1px solid var(--line); border-radius:22px; padding:11px 16px; font-size:14px; outline:none; background:var(--paper); color:var(--ink);}
+  .send-btn{width:42px; height:42px; border-radius:50%; background:var(--moss-strong); color:#fff; border:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .send-btn:disabled{opacity:.4;}
+
+  /* Profile */
+  .profile-header{display:flex; align-items:center; gap:14px;}
+  .avatar-circle{width:56px; height:56px; border-radius:50%; background:var(--moss-tint); color:var(--moss-strong); display:flex; align-items:center; justify-content:center; font-family:var(--font-d); font-size:20px; font-weight:700;}
+  .settings-list{display:flex; flex-direction:column; gap:1px; background:var(--line); border-radius:var(--r-m); overflow:hidden;}
+  .settings-row{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:var(--surface); font-size:13.5px;}
+  .settings-row .lbl{display:flex; align-items:center; gap:10px; color:var(--ink);}
+  .settings-row .val{color:var(--ink-faint); font-size:12.5px;}
+  .tag-list{display:flex; gap:6px; flex-wrap:wrap;}
+  .tag{background:var(--surface-2); color:var(--ink-soft); font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:12px;}
+  .privacy-list{display:flex; flex-direction:column; gap:10px; font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
+  .privacy-list li{margin-left:16px;}
+  .disclaimer{font-size:11.5px; color:var(--ink-faint); line-height:1.5; padding:4px 2px;}
+
+  .widget-mock{background:var(--surface); border-radius:20px; padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:8px;}
+  .widget-mock h4{font-size:12px; color:var(--ink-faint); font-weight:600;}
+.widget-page{gap:14px;}
+.barcode-camera{position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:#10160f;display:flex;align-items:center;justify-content:center;}
+.barcode-camera video{width:100%;height:100%;object-fit:cover;}
+.barcode-guide{position:absolute;width:72%;height:30%;border:2px solid rgba(255,255,255,.9);border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.22);}
+.nutrition-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.nutrition-card{border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--surface-2);}
+.nutrition-card b{display:block;font-family:var(--font-d);font-size:17px;color:var(--ink);}
+.nutrition-card span{display:block;font-size:10.5px;color:var(--ink-faint);margin-top:3px;}
+.nutrition-note{font-size:11.5px;line-height:1.5;color:var(--ink-faint);margin-top:10px;}
+
+  .widget-status{background:var(--surface-2);border:1px solid var(--line);border-radius:18px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--moss-strong);}
+  .widget-status strong{display:block;font-size:13px;color:var(--ink);margin-bottom:3px;}
+  .widget-status p{font-size:11.5px;color:var(--ink-faint);line-height:1.4;}
+  .widget-live{padding:16px;}
+  .widget-head{display:flex;align-items:center;justify-content:space-between;}
+  .widget-head span{font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--moss-strong);}
+  .widget-kcal{display:flex;align-items:baseline;gap:7px;margin:8px 0 12px;}
+  .widget-kcal strong{font-family:var(--font-d);font-size:34px;line-height:1;}
+  .widget-kcal small{font-size:11px;color:var(--ink-faint);}
+  .widget-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+  .widget-actions button,.widget-metrics button{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:9px 8px;text-align:left;font-size:11px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .widget-actions button span{display:flex;color:var(--moss-strong);}
+  .widget-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px;}
+  .widget-metrics button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+  .widget-metrics b{font-size:14px;color:var(--ink);}
+  .widget-metrics span{font-size:10px;color:var(--ink-faint);}
+  .widget-note{font-size:11px;line-height:1.5;color:var(--ink-faint);padding:2px 3px 10px;}
+
+  .toast{
+    position:fixed; left:50%; bottom:30px; transform:translateX(-50%); background:var(--ink); color:var(--paper);
+    padding:11px 18px; border-radius:22px; font-size:13px; font-weight:600; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    max-width:86%; text-align:center;
+  }
+  [data-theme="dark"] .toast, :root:not([data-theme="light"]) .toast{ }
+
+  .confirm-overlay{position:fixed; inset:0; background:rgba(16,22,15,.5); display:flex; align-items:center; justify-content:center; z-index:80; padding:24px;}
+  .confirm-box{background:var(--surface); border-radius:var(--r-l); padding:22px; max-width:340px; width:100%; display:flex; flex-direction:column; gap:14px; box-shadow:var(--shadow);}
+  .confirm-box h3{font-size:16px;}
+  .confirm-box p{font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+  .confirm-actions{display:flex; gap:10px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   ICONS
+========================================================= */
+var ICONS = {
+  home:'<path d="M3 11.5l9-8 9 8"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H9.5v-6.5h5v6.5h3a1 1 0 0 0 1-1V10"/>',
+  meals:'<path d="M7 2v7a2 2 0 0 0 4 0V2M9 9v13"/><path d="M16 2c-1.4 1-2 2.6-2 5s.9 3.6 2 4v11"/>',
+  activity:'<path d="M3 12h4l2-8 4 16 2-8h6"/>',
+  insights:'<path d="M4 20V11M10 20V4M16 20v-6M4 20h16"/>',
+  profile:'<circle cx="12" cy="8.2" r="3.6"/><path d="M4.5 20.2c1.2-4 4.6-6.2 7.5-6.2s6.3 2.2 7.5 6.2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  camera:'<path d="M4 8.2h3.2l1.7-2.6h6.2l1.7 2.6H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.2a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.4" r="3.4"/>',
+  edit3:'<path d="M11.5 19.5H20"/><path d="M15.7 4.3a1.9 1.9 0 0 1 2.7 2.7L7.5 18l-4 1 1-4z"/>',
+  search:'<circle cx="10.6" cy="10.6" r="6.6"/><path d="M20 20l-4.3-4.3"/>',
+  mic:'<rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.2 10.5a6.8 6.8 0 0 0 13.6 0"/><path d="M12 18.5v3"/>',
+  barcode:'<path d="M3 5.5v13M6.4 5.5v13M9 5.5v13M13 5.5v13M15.6 5.5v13M19.5 5.5v13" stroke-linecap="butt"/>',
+  starOutline:'<path d="M12 3.3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3-5.4 3 1.3-6-4.6-4.1 6.1-.6z"/>',
+  starFilled:'<path fill="currentColor" stroke="none" d="M12 3.3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3-5.4 3 1.3-6-4.6-4.1 6.1-.6z"/>',
+  chevronRight:'<path d="M9 6l6 6-6 6"/>',
+  chevronDown:'<path d="M6 9l6 6 6-6"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+  trash:'<path d="M4 7h16M9.5 7V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6.5 7l1 12.2a1 1 0 0 0 1 .8h7a1 1 0 0 0 1-.8L17.5 7"/>',
+  water:'<path d="M12 3.2s6.2 7.2 6.2 11.3a6.2 6.2 0 0 1-12.4 0C5.8 10.4 12 3.2 12 3.2z"/>',
+  send:'<path d="M21.5 2.5L10.8 13.2"/><path d="M21.5 2.5l-6.8 19-4-9-9-4z"/>',
+  bot:'<rect x="5" y="9" width="14" height="10.5" rx="4"/><circle cx="9.5" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14" r="1.1" fill="currentColor" stroke="none"/><path d="M12 5.5v3M9.5 5.5h5"/>',
+  arrowLeft:'<path d="M19 12H5M11 18l-6-6 6-6"/>',
+  refresh:'<path d="M20.5 12a8.5 8.5 0 1 1-2.8-6.3"/><path d="M20.5 3.5v6h-6"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',
+  image:'<rect x="3" y="4.5" width="18" height="15" rx="2.4"/><circle cx="8.3" cy="9.5" r="1.6"/><path d="M21 16l-5.5-5.5L6 20"/>'
+};
+function icon(name,size,cls){
+  size = size || 22;
+  return '<svg class="icon '+(cls||'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';
+}
+
+/* =========================================================
+   FOOD DATABASE — derived from foods.json + recipes.json +
+   aliases.json (foods -> recipes -> aliases), instead of a
+   hard-coded nutrition table. RAW_FOODS/RAW_RECIPES/ALIASES_DATA
+   below are the exact content of those three files (minified).
+   To refresh the data later, just replace these three blocks
+   with the new file contents — nothing else needs to change,
+   catalog computation (buildCatalog) recalculates from them.
+========================================================= */
+var RAW_FOODS = [{"id":"rice_white_cooked","name":"Nasi putih matang","aliases":["nasi putih","nasi"],"category":"karbohidrat","basis_g":100,"kcal":130,"protein":2.7,"carbs":28.2,"fat":0.3,"fiber":0.4,"sugar":0.1,"sodium":1,"source":"TKPI / starter normalization","confidence":"high"},{"id":"rice_brown_cooked","name":"Nasi merah matang","aliases":["nasi merah"],"category":"karbohidrat","basis_g":100,"kcal":123,"protein":2.7,"carbs":25.6,"fat":1.0,"fiber":1.6,"sugar":0.2,"sodium":1,"source":"TKPI / starter normalization","confidence":"medium"},{"id":"glutinous_rice_cooked","name":"Ketan matang","aliases":["ketan","beras ketan matang"],"category":"karbohidrat","basis_g":100,"kcal":169,"protein":3.5,"carbs":37.0,"fat":0.3,"fiber":0.5,"sugar":0.1,"sodium":1,"source":"Starter normalization","confidence":"medium"},{"id":"potato","name":"Kentang","aliases":["kentang"],"category":"umbi","basis_g":100,"kcal":77,"protein":2.0,"carbs":17.5,"fat":0.1,"fiber":2.2,"sugar":0.8,"sodium":6,"source":"TKPI / starter normalization","confidence":"high"},{"id":"cassava","name":"Singkong","aliases":["singkong","ketela pohon"],"category":"umbi","basis_g":100,"kcal":160,"protein":1.4,"carbs":38.1,"fat":0.3,"fiber":1.8,"sugar":1.7,"sodium":14,"source":"Starter normalization","confidence":"medium"},{"id":"sweet_potato","name":"Ubi jalar","aliases":["ubi","ubi jalar","ketela rambat"],"category":"umbi","basis_g":100,"kcal":86,"protein":1.6,"carbs":20.1,"fat":0.1,"fiber":3.0,"sugar":4.2,"sodium":55,"source":"Starter normalization","confidence":"medium"},{"id":"corn","name":"Jagung","aliases":["jagung"],"category":"karbohidrat","basis_g":100,"kcal":86,"protein":3.3,"carbs":18.7,"fat":1.4,"fiber":2.0,"sugar":6.3,"sodium":15,"source":"Starter normalization","confidence":"medium"},{"id":"wheat_flour","name":"Tepung terigu","aliases":["terigu","tepung"],"category":"karbohidrat","basis_g":100,"kcal":364,"protein":10.3,"carbs":76.3,"fat":1.0,"fiber":2.7,"sugar":0.3,"sodium":2,"source":"Starter normalization","confidence":"medium"},{"id":"chicken_meat","name":"Daging ayam","aliases":["ayam","daging ayam"],"category":"protein hewani","basis_g":100,"kcal":165,"protein":18.2,"carbs":0,"fat":9.2,"fiber":0,"sugar":0,"sodium":74,"source":"Starter normalization","confidence":"medium"},{"id":"beef","name":"Daging sapi","aliases":["sapi","daging sapi"],"category":"protein hewani","basis_g":100,"kcal":217,"protein":26.1,"carbs":0,"fat":12.0,"fiber":0,"sugar":0,"sodium":55,"source":"Starter normalization","confidence":"medium"},{"id":"catfish","name":"Ikan lele","aliases":["lele","ikan lele"],"category":"protein hewani","basis_g":100,"kcal":105,"protein":18.7,"carbs":0,"fat":2.9,"fiber":0,"sugar":0,"sodium":50,"source":"Starter normalization","confidence":"medium"},{"id":"milkfish","name":"Ikan bandeng","aliases":["bandeng","ikan bandeng"],"category":"protein hewani","basis_g":100,"kcal":148,"protein":17.1,"carbs":0,"fat":8.0,"fiber":0,"sugar":0,"sodium":60,"source":"Starter normalization","confidence":"medium"},{"id":"mackerel","name":"Ikan kembung","aliases":["kembung","ikan kembung"],"category":"protein hewani","basis_g":100,"kcal":167,"protein":21.3,"carbs":0,"fat":8.4,"fiber":0,"sugar":0,"sodium":90,"source":"Starter normalization","confidence":"medium"},{"id":"tuna","name":"Ikan tuna","aliases":["tuna","ikan tuna"],"category":"protein hewani","basis_g":100,"kcal":132,"protein":28.0,"carbs":0,"fat":1.3,"fiber":0,"sugar":0,"sodium":47,"source":"Starter normalization","confidence":"medium"},{"id":"shrimp","name":"Udang","aliases":["udang"],"category":"protein hewani","basis_g":100,"kcal":85,"protein":20.0,"carbs":0,"fat":0.5,"fiber":0,"sugar":0,"sodium":111,"source":"Starter normalization","confidence":"medium"},{"id":"squid","name":"Cumi","aliases":["cumi","cumi-cumi"],"category":"protein hewani","basis_g":100,"kcal":92,"protein":15.6,"carbs":3.1,"fat":1.4,"fiber":0,"sugar":0,"sodium":44,"source":"Starter normalization","confidence":"medium"},{"id":"egg_chicken","name":"Telur ayam","aliases":["telur","telur ayam"],"category":"protein hewani","basis_g":100,"kcal":143,"protein":12.6,"carbs":0.7,"fat":9.5,"fiber":0,"sugar":0.4,"sodium":142,"source":"Starter normalization","confidence":"high"},{"id":"egg_quail","name":"Telur puyuh","aliases":["telur puyuh"],"category":"protein hewani","basis_g":100,"kcal":158,"protein":13.1,"carbs":0.4,"fat":11.1,"fiber":0,"sugar":0.4,"sodium":141,"source":"Starter normalization","confidence":"medium"},{"id":"soybean","name":"Kedelai","aliases":["kedelai","kacang kedelai"],"category":"kacang","basis_g":100,"kcal":446,"protein":36.5,"carbs":30.2,"fat":19.9,"fiber":9.3,"sugar":7.3,"sodium":2,"source":"Starter normalization","confidence":"medium"},{"id":"tempe","name":"Tempe kedelai","aliases":["tempe","tempeh"],"category":"protein nabati","basis_g":100,"kcal":193,"protein":20.3,"carbs":7.6,"fat":10.8,"fiber":3.9,"sugar":0,"sodium":9,"source":"Starter normalization","confidence":"medium"},{"id":"tofu","name":"Tahu","aliases":["tahu","tofu"],"category":"protein nabati","basis_g":100,"kcal":80,"protein":10.0,"carbs":2.0,"fat":4.0,"fiber":0.4,"sugar":0.5,"sodium":10,"source":"Starter normalization","confidence":"medium"},{"id":"peanut","name":"Kacang tanah","aliases":["kacang tanah","peanut"],"category":"kacang","basis_g":100,"kcal":567,"protein":25.8,"carbs":16.1,"fat":49.2,"fiber":8.5,"sugar":4.7,"sodium":18,"source":"Starter normalization","confidence":"medium"},{"id":"spinach","name":"Bayam","aliases":["bayam"],"category":"sayur","basis_g":100,"kcal":23,"protein":2.9,"carbs":3.6,"fat":0.4,"fiber":2.2,"sugar":0.4,"sodium":79,"source":"Starter normalization","confidence":"medium"},{"id":"water_spinach","name":"Kangkung","aliases":["kangkung"],"category":"sayur","basis_g":100,"kcal":29,"protein":3.0,"carbs":5.4,"fat":0.3,"fiber":2.0,"sugar":0.4,"sodium":44,"source":"Starter normalization","confidence":"medium"},{"id":"long_beans","name":"Kacang panjang","aliases":["kacang panjang"],"category":"sayur","basis_g":100,"kcal":47,"protein":2.8,"carbs":8.4,"fat":0.4,"fiber":3.7,"sugar":3.3,"sodium":4,"source":"Starter normalization","confidence":"medium"},{"id":"carrot","name":"Wortel","aliases":["wortel"],"category":"sayur","basis_g":100,"kcal":41,"protein":0.9,"carbs":9.6,"fat":0.2,"fiber":2.8,"sugar":4.7,"sodium":69,"source":"Starter normalization","confidence":"medium"},{"id":"cabbage","name":"Kubis","aliases":["kubis","kol"],"category":"sayur","basis_g":100,"kcal":25,"protein":1.3,"carbs":5.8,"fat":0.1,"fiber":2.5,"sugar":3.2,"sodium":18,"source":"Starter normalization","confidence":"medium"},{"id":"cucumber","name":"Mentimun","aliases":["mentimun","timun"],"category":"sayur","basis_g":100,"kcal":15,"protein":0.7,"carbs":3.6,"fat":0.1,"fiber":0.5,"sugar":1.7,"sodium":2,"source":"Starter normalization","confidence":"medium"},{"id":"tomato","name":"Tomat","aliases":["tomat"],"category":"sayur","basis_g":100,"kcal":18,"protein":0.9,"carbs":3.9,"fat":0.2,"fiber":1.2,"sugar":2.6,"sodium":5,"source":"Starter normalization","confidence":"medium"},{"id":"eggplant","name":"Terong","aliases":["terong","terung"],"category":"sayur","basis_g":100,"kcal":25,"protein":1.0,"carbs":6.0,"fat":0.2,"fiber":3.0,"sugar":3.2,"sodium":2,"source":"Starter normalization","confidence":"medium"},{"id":"bean_sprout","name":"Tauge","aliases":["tauge","taoge"],"category":"sayur","basis_g":100,"kcal":30,"protein":3.0,"carbs":5.9,"fat":0.2,"fiber":1.8,"sugar":4.1,"sodium":6,"source":"Starter normalization","confidence":"medium"},{"id":"shallot","name":"Bawang merah","aliases":["bawang merah"],"category":"bumbu","basis_g":100,"kcal":72,"protein":2.5,"carbs":16.8,"fat":0.1,"fiber":3.2,"sugar":7.9,"sodium":12,"source":"Starter normalization","confidence":"medium"},{"id":"garlic","name":"Bawang putih","aliases":["bawang putih"],"category":"bumbu","basis_g":100,"kcal":149,"protein":6.4,"carbs":33.1,"fat":0.5,"fiber":2.1,"sugar":1.0,"sodium":17,"source":"Starter normalization","confidence":"medium"},{"id":"red_chili","name":"Cabai merah","aliases":["cabai merah","cabe merah"],"category":"bumbu","basis_g":100,"kcal":40,"protein":1.9,"carbs":8.8,"fat":0.4,"fiber":1.5,"sugar":5.3,"sodium":7,"source":"Starter normalization","confidence":"medium"},{"id":"bird_eye_chili","name":"Cabai rawit","aliases":["cabai rawit","cabe rawit"],"category":"bumbu","basis_g":100,"kcal":40,"protein":2.0,"carbs":9.5,"fat":0.4,"fiber":1.5,"sugar":5.0,"sodium":9,"source":"Starter normalization","confidence":"medium"},{"id":"sweet_soy_sauce","name":"Kecap manis","aliases":["kecap manis","kecap"],"category":"bumbu","basis_g":100,"kcal":240,"protein":5.0,"carbs":55.0,"fat":0.0,"fiber":0,"sugar":50.0,"sodium":1100,"source":"Recipe/product estimate","confidence":"low"},{"id":"sugar","name":"Gula pasir","aliases":["gula","gula pasir"],"category":"pemanis","basis_g":100,"kcal":387,"protein":0,"carbs":100,"fat":0,"fiber":0,"sugar":100,"sodium":1,"source":"Standard ingredient","confidence":"high"},{"id":"coconut_milk","name":"Santan","aliases":["santan","santan kelapa"],"category":"lemak","basis_g":100,"kcal":230,"protein":2.3,"carbs":5.5,"fat":23.8,"fiber":2.2,"sugar":3.3,"sodium":15,"source":"Starter normalization","confidence":"medium"},{"id":"cooking_oil","name":"Minyak goreng","aliases":["minyak","minyak goreng"],"category":"lemak","basis_g":100,"kcal":884,"protein":0,"carbs":0,"fat":100,"fiber":0,"sugar":0,"sodium":0,"source":"Standard ingredient","confidence":"high"},{"id":"salt","name":"Garam","aliases":["garam"],"category":"bumbu","basis_g":1,"kcal":0,"protein":0,"carbs":0,"fat":0,"fiber":0,"sugar":0,"sodium":393,"source":"Standard ingredient","confidence":"high"},{"id":"banana","name":"Pisang","aliases":["pisang"],"category":"buah","basis_g":100,"kcal":89,"protein":1.1,"carbs":22.8,"fat":0.3,"fiber":2.6,"sugar":12.2,"sodium":1,"source":"Starter normalization","confidence":"medium"},{"id":"papaya","name":"Pepaya","aliases":["pepaya"],"category":"buah","basis_g":100,"kcal":43,"protein":0.5,"carbs":10.8,"fat":0.3,"fiber":1.7,"sugar":7.8,"sodium":8,"source":"Starter normalization","confidence":"medium"},{"id":"mango","name":"Mangga","aliases":["mangga"],"category":"buah","basis_g":100,"kcal":60,"protein":0.8,"carbs":15.0,"fat":0.4,"fiber":1.6,"sugar":13.7,"sodium":1,"source":"Starter normalization","confidence":"medium"},{"id":"guava","name":"Jambu biji","aliases":["jambu biji","jambu"],"category":"buah","basis_g":100,"kcal":68,"protein":2.6,"carbs":14.3,"fat":1.0,"fiber":5.4,"sugar":8.9,"sodium":2,"source":"Starter normalization","confidence":"medium"},{"id":"pineapple","name":"Nanas","aliases":["nanas"],"category":"buah","basis_g":100,"kcal":50,"protein":0.5,"carbs":13.1,"fat":0.1,"fiber":1.4,"sugar":9.9,"sodium":1,"source":"Starter normalization","confidence":"medium"},{"id":"watermelon","name":"Semangka","aliases":["semangka"],"category":"buah","basis_g":100,"kcal":30,"protein":0.6,"carbs":7.6,"fat":0.2,"fiber":0.4,"sugar":6.2,"sodium":1,"source":"Starter normalization","confidence":"medium"},{"id":"orange","name":"Jeruk","aliases":["jeruk"],"category":"buah","basis_g":100,"kcal":47,"protein":0.9,"carbs":11.8,"fat":0.1,"fiber":2.4,"sugar":9.4,"sodium":0,"source":"Starter normalization","confidence":"medium"}];
+var RAW_RECIPES = [{"id":"nasi_goreng","name":"Nasi goreng","aliases":["nasi goreng","nasgor","nasi goreng kampung"],"category":"makanan utama","default_serving":{"label":"1 piring","grams":250},"ingredients":[{"food_id":"rice_white_cooked","grams":200},{"food_id":"egg_chicken","grams":50},{"food_id":"cooking_oil","grams":10},{"food_id":"sweet_soy_sauce","grams":15},{"food_id":"shallot","grams":10},{"food_id":"garlic","grams":5}],"confidence":"low","note":"Resep dasar; minyak, kecap, topping dan ukuran porsi sangat bervariasi."},{"id":"tempe_goreng","name":"Tempe goreng","aliases":["tempe goreng"],"category":"lauk","default_serving":{"label":"2 potong","grams":50},"ingredients":[{"food_id":"tempe","grams":45},{"food_id":"cooking_oil","grams":8},{"food_id":"salt","grams":0.5}],"confidence":"low","note":"Penyerapan minyak berbeda menurut teknik menggoreng."},{"id":"tahu_goreng","name":"Tahu goreng","aliases":["tahu goreng"],"category":"lauk","default_serving":{"label":"2 potong","grams":50},"ingredients":[{"food_id":"tofu","grams":45},{"food_id":"cooking_oil","grams":8},{"food_id":"salt","grams":0.3}],"confidence":"low","note":"Ukuran tahu dan penyerapan minyak bervariasi."},{"id":"telur_dadar","name":"Telur dadar","aliases":["telur dadar","dadar telur"],"category":"lauk","default_serving":{"label":"1 porsi","grams":60},"ingredients":[{"food_id":"egg_chicken","grams":55},{"food_id":"cooking_oil","grams":5},{"food_id":"salt","grams":0.5}],"confidence":"low"},{"id":"telur_rebus","name":"Telur rebus","aliases":["telur rebus"],"category":"lauk","default_serving":{"label":"1 butir","grams":50},"ingredients":[{"food_id":"egg_chicken","grams":50}],"confidence":"medium"},{"id":"ayam_goreng","name":"Ayam goreng","aliases":["ayam goreng"],"category":"lauk","default_serving":{"label":"1 potong","grams":100},"ingredients":[{"food_id":"chicken_meat","grams":90},{"food_id":"cooking_oil","grams":10},{"food_id":"salt","grams":0.7}],"confidence":"low","note":"Belum memodelkan tepung/coating; cocok sebagai baseline, bukan nilai laboratorium."},{"id":"ayam_bakar","name":"Ayam bakar","aliases":["ayam bakar"],"category":"lauk","default_serving":{"label":"1 potong","grams":100},"ingredients":[{"food_id":"chicken_meat","grams":90},{"food_id":"sweet_soy_sauce","grams":10},{"food_id":"shallot","grams":5},{"food_id":"garlic","grams":3}],"confidence":"low"},{"id":"sate_ayam","name":"Sate ayam","aliases":["sate ayam"],"category":"lauk","default_serving":{"label":"5 tusuk","grams":100},"ingredients":[{"food_id":"chicken_meat","grams":80},{"food_id":"peanut","grams":15},{"food_id":"sweet_soy_sauce","grams":5}],"confidence":"low","note":"Saus kacang dan ukuran tusuk sangat bervariasi."},{"id":"gado_gado","name":"Gado-gado","aliases":["gado-gado","gado gado"],"category":"makanan utama","default_serving":{"label":"1 porsi","grams":300},"ingredients":[{"food_id":"bean_sprout","grams":50},{"food_id":"cabbage","grams":50},{"food_id":"long_beans","grams":40},{"food_id":"tofu","grams":50},{"food_id":"tempe","grams":30},{"food_id":"peanut","grams":35}],"confidence":"low","note":"Belum memasukkan seluruh komponen regional; saus kacang sangat menentukan energi."},{"id":"pecel","name":"Pecel","aliases":["pecel"],"category":"makanan utama","default_serving":{"label":"1 porsi","grams":280},"ingredients":[{"food_id":"water_spinach","grams":60},{"food_id":"bean_sprout","grams":50},{"food_id":"cabbage","grams":40},{"food_id":"peanut","grams":35},{"food_id":"sweet_soy_sauce","grams":5}],"confidence":"low"},{"id":"sayur_asem","name":"Sayur asem","aliases":["sayur asem","sayur asam"],"category":"masakan","default_serving":{"label":"1 mangkuk","grams":250},"ingredients":[{"food_id":"corn","grams":50},{"food_id":"long_beans","grams":30},{"food_id":"cabbage","grams":30},{"food_id":"tomato","grams":20},{"food_id":"shallot","grams":10},{"food_id":"garlic","grams":5},{"food_id":"salt","grams":1}],"confidence":"low"},{"id":"rawon","name":"Rawon","aliases":["rawon"],"category":"masakan","default_serving":{"label":"1 mangkuk","grams":350},"ingredients":[{"food_id":"beef","grams":80},{"food_id":"shallot","grams":15},{"food_id":"garlic","grams":8},{"food_id":"cooking_oil","grams":8},{"food_id":"salt","grams":1}],"confidence":"low","note":"Belum memasukkan kluwek dan seluruh bumbu khas; perlu resep regional yang lebih rinci."},{"id":"rendang","name":"Rendang sapi","aliases":["rendang","rendang sapi"],"category":"masakan","default_serving":{"label":"1 porsi","grams":100},"ingredients":[{"food_id":"beef","grams":65},{"food_id":"coconut_milk","grams":25},{"food_id":"cooking_oil","grams":5},{"food_id":"shallot","grams":5},{"food_id":"garlic","grams":3},{"food_id":"red_chili","grams":3},{"food_id":"salt","grams":0.8}],"confidence":"low","note":"Resep autentik memiliki banyak bumbu dan variasi santan/minyak."},{"id":"opor_ayam","name":"Opor ayam","aliases":["opor ayam","opor"],"category":"masakan","default_serving":{"label":"1 porsi","grams":250},"ingredients":[{"food_id":"chicken_meat","grams":90},{"food_id":"coconut_milk","grams":60},{"food_id":"shallot","grams":10},{"food_id":"garlic","grams":5},{"food_id":"cooking_oil","grams":5},{"food_id":"salt","grams":0.8}],"confidence":"low"},{"id":"soto_ayam","name":"Soto ayam","aliases":["soto ayam","soto"],"category":"masakan","default_serving":{"label":"1 mangkuk","grams":350},"ingredients":[{"food_id":"chicken_meat","grams":70},{"food_id":"egg_chicken","grams":25},{"food_id":"cabbage","grams":30},{"food_id":"bean_sprout","grams":30},{"food_id":"shallot","grams":10},{"food_id":"garlic","grams":5},{"food_id":"cooking_oil","grams":5},{"food_id":"salt","grams":1}],"confidence":"low","note":"Belum memasukkan bihun/nasi dan seluruh kuah; perlu varian resep."},{"id":"mie_goreng","name":"Mi goreng","aliases":["mie goreng","mi goreng"],"category":"makanan utama","default_serving":{"label":"1 piring","grams":250},"ingredients":[{"food_id":"wheat_flour","grams":80},{"food_id":"egg_chicken","grams":30},{"food_id":"cooking_oil","grams":10},{"food_id":"cabbage","grams":30},{"food_id":"sweet_soy_sauce","grams":10}],"confidence":"low","note":"Ini pendekatan resep; untuk mi instan/produk kemasan gunakan barcode/produk."},{"id":"bakso","name":"Bakso sapi","aliases":["bakso"],"category":"masakan","default_serving":{"label":"1 mangkuk","grams":300},"ingredients":[{"food_id":"beef","grams":80},{"food_id":"wheat_flour","grams":15},{"food_id":"salt","grams":1},{"food_id":"cabbage","grams":20}],"confidence":"low","note":"Belum memodelkan seluruh adonan, mie/bihun, saus dan kuah."},{"id":"pisang_goreng","name":"Pisang goreng","aliases":["pisang goreng"],"category":"camilan","default_serving":{"label":"2 buah","grams":100},"ingredients":[{"food_id":"banana","grams":70},{"food_id":"wheat_flour","grams":25},{"food_id":"cooking_oil","grams":8},{"food_id":"sugar","grams":3}],"confidence":"low"},{"id":"es_buah_sederhana","name":"Es buah sederhana","aliases":["es buah"],"category":"minuman/makanan","default_serving":{"label":"1 mangkuk","grams":250},"ingredients":[{"food_id":"papaya","grams":50},{"food_id":"watermelon","grams":50},{"food_id":"banana","grams":40},{"food_id":"sugar","grams":10}],"confidence":"low","note":"Santan, susu kental manis, sirup, dan topping belum dimasukkan."}];
+var ALIASES_DATA = {"schema_version":"1.0","rules":{"normalization":["lowercase","trim","collapse_spaces","remove_optional_hyphen"],"priority":["exact_alias","recipe_alias","food_alias","fuzzy_search"]},"map":{"nasi putih":{"type":"food","id":"rice_white_cooked"},"nasi":{"type":"food","id":"rice_white_cooked"},"nasi putih matang":{"type":"food","id":"rice_white_cooked"},"nasi merah":{"type":"food","id":"rice_brown_cooked"},"nasi merah matang":{"type":"food","id":"rice_brown_cooked"},"ketan":{"type":"food","id":"glutinous_rice_cooked"},"beras ketan matang":{"type":"food","id":"glutinous_rice_cooked"},"ketan matang":{"type":"food","id":"glutinous_rice_cooked"},"kentang":{"type":"food","id":"potato"},"singkong":{"type":"food","id":"cassava"},"ketela pohon":{"type":"food","id":"cassava"},"ubi":{"type":"food","id":"sweet_potato"},"ubi jalar":{"type":"food","id":"sweet_potato"},"ketela rambat":{"type":"food","id":"sweet_potato"},"jagung":{"type":"food","id":"corn"},"terigu":{"type":"food","id":"wheat_flour"},"tepung":{"type":"food","id":"wheat_flour"},"tepung terigu":{"type":"food","id":"wheat_flour"},"ayam":{"type":"food","id":"chicken_meat"},"daging ayam":{"type":"food","id":"chicken_meat"},"sapi":{"type":"food","id":"beef"},"daging sapi":{"type":"food","id":"beef"},"lele":{"type":"food","id":"catfish"},"ikan lele":{"type":"food","id":"catfish"},"bandeng":{"type":"food","id":"milkfish"},"ikan bandeng":{"type":"food","id":"milkfish"},"kembung":{"type":"food","id":"mackerel"},"ikan kembung":{"type":"food","id":"mackerel"},"tuna":{"type":"food","id":"tuna"},"ikan tuna":{"type":"food","id":"tuna"},"udang":{"type":"food","id":"shrimp"},"cumi":{"type":"food","id":"squid"},"cumi-cumi":{"type":"food","id":"squid"},"telur":{"type":"food","id":"egg_chicken"},"telur ayam":{"type":"food","id":"egg_chicken"},"telur puyuh":{"type":"food","id":"egg_quail"},"kedelai":{"type":"food","id":"soybean"},"kacang kedelai":{"type":"food","id":"soybean"},"tempe":{"type":"food","id":"tempe"},"tempeh":{"type":"food","id":"tempe"},"tempe kedelai":{"type":"food","id":"tempe"},"tahu":{"type":"food","id":"tofu"},"tofu":{"type":"food","id":"tofu"},"kacang tanah":{"type":"food","id":"peanut"},"peanut":{"type":"food","id":"peanut"},"bayam":{"type":"food","id":"spinach"},"kangkung":{"type":"food","id":"water_spinach"},"kacang panjang":{"type":"food","id":"long_beans"},"wortel":{"type":"food","id":"carrot"},"kubis":{"type":"food","id":"cabbage"},"kol":{"type":"food","id":"cabbage"},"mentimun":{"type":"food","id":"cucumber"},"timun":{"type":"food","id":"cucumber"},"tomat":{"type":"food","id":"tomato"},"terong":{"type":"food","id":"eggplant"},"terung":{"type":"food","id":"eggplant"},"tauge":{"type":"food","id":"bean_sprout"},"taoge":{"type":"food","id":"bean_sprout"},"bawang merah":{"type":"food","id":"shallot"},"bawang putih":{"type":"food","id":"garlic"},"cabai merah":{"type":"food","id":"red_chili"},"cabe merah":{"type":"food","id":"red_chili"},"cabai rawit":{"type":"food","id":"bird_eye_chili"},"cabe rawit":{"type":"food","id":"bird_eye_chili"},"kecap manis":{"type":"food","id":"sweet_soy_sauce"},"kecap":{"type":"food","id":"sweet_soy_sauce"},"gula":{"type":"food","id":"sugar"},"gula pasir":{"type":"food","id":"sugar"},"santan":{"type":"food","id":"coconut_milk"},"santan kelapa":{"type":"food","id":"coconut_milk"},"minyak":{"type":"food","id":"cooking_oil"},"minyak goreng":{"type":"food","id":"cooking_oil"},"garam":{"type":"food","id":"salt"},"pisang":{"type":"food","id":"banana"},"pepaya":{"type":"food","id":"papaya"},"mangga":{"type":"food","id":"mango"},"jambu biji":{"type":"food","id":"guava"},"jambu":{"type":"food","id":"guava"},"nanas":{"type":"food","id":"pineapple"},"semangka":{"type":"food","id":"watermelon"},"jeruk":{"type":"food","id":"orange"},"nasi goreng":{"type":"recipe","id":"nasi_goreng"},"nasgor":{"type":"recipe","id":"nasi_goreng"},"nasi goreng kampung":{"type":"recipe","id":"nasi_goreng"},"tempe goreng":{"type":"recipe","id":"tempe_goreng"},"tahu goreng":{"type":"recipe","id":"tahu_goreng"},"telur dadar":{"type":"recipe","id":"telur_dadar"},"dadar telur":{"type":"recipe","id":"telur_dadar"},"telur rebus":{"type":"recipe","id":"telur_rebus"},"ayam goreng":{"type":"recipe","id":"ayam_goreng"},"ayam bakar":{"type":"recipe","id":"ayam_bakar"},"sate ayam":{"type":"recipe","id":"sate_ayam"},"gado-gado":{"type":"recipe","id":"gado_gado"},"gado gado":{"type":"recipe","id":"gado_gado"},"pecel":{"type":"recipe","id":"pecel"},"sayur asem":{"type":"recipe","id":"sayur_asem"},"sayur asam":{"type":"recipe","id":"sayur_asem"},"rawon":{"type":"recipe","id":"rawon"},"rendang":{"type":"recipe","id":"rendang"},"rendang sapi":{"type":"recipe","id":"rendang"},"opor ayam":{"type":"recipe","id":"opor_ayam"},"opor":{"type":"recipe","id":"opor_ayam"},"soto ayam":{"type":"recipe","id":"soto_ayam"},"soto":{"type":"recipe","id":"soto_ayam"},"mie goreng":{"type":"recipe","id":"mie_goreng"},"mi goreng":{"type":"recipe","id":"mie_goreng"},"bakso":{"type":"recipe","id":"bakso"},"bakso sapi":{"type":"recipe","id":"bakso"},"pisang goreng":{"type":"recipe","id":"pisang_goreng"},"es buah":{"type":"recipe","id":"es_buah_sederhana"},"es buah sederhana":{"type":"recipe","id":"es_buah_sederhana"},"ayam goreng 1 potong":{"type":"recipe","id":"ayam_goreng"},"tempe goreng 2 potong":{"type":"recipe","id":"tempe_goreng"},"telor":{"type":"food","id":"egg_chicken"},"cabe":{"type":"food","id":"bird_eye_chili"},"cabai":{"type":"food","id":"bird_eye_chili"}}};
+// (FOOD_DB / CATALOG built below from RAW_FOODS+RAW_RECIPES, see buildCatalog())
+function titleCaseCat(s){
+  return (s||'Lainnya').split(' ').map(function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }).join(' ');
+}
+/* A serving label like "2 potong" or "5 tusuk" implies a per-piece weight.
+   Reading that count out of the label (instead of hard-coding it per item)
+   is what makes "1 potong tahu" / "3 tusuk sate" scale correctly no matter
+   which recipe it is — the fix generalizes automatically to every recipe
+   in recipes.json rather than needing a manual patch per food. */
+function unitGramsFromLabel(label, grams){
+  if(!label) return null;
+  var m = label.match(/^(\d+)/);
+  if(m){ var n = parseInt(m[1],10); if(n>1) return grams/n; }
+  return null;
+}
+function buildCatalog(){
+  var rateById = {};
+  RAW_FOODS.forEach(function(f){
+    var basis = f.basis_g || 100;
+    rateById[f.id] = {
+      kcal:(f.kcal||0)/basis, protein:(f.protein||0)/basis, carbs:(f.carbs||0)/basis,
+      fat:(f.fat||0)/basis, fiber:(f.fiber||0)/basis, sugar:(f.sugar||0)/basis, sodium:(f.sodium||0)/basis
+    };
+  });
+  var catalog = {};
+  var list = [];
+  RAW_FOODS.forEach(function(f){
+    var basis = f.basis_g || 100;
+    var r = rateById[f.id];
+    var entry = {
+      id:f.id, name:f.name, aliases:(f.aliases||[]).slice(),
+      grams:basis, label:basis+' g', unitGrams:null,
+      kcal:Math.round(r.kcal*basis), protein:round1(r.protein*basis), carbs:round1(r.carbs*basis),
+      fat:round1(r.fat*basis), fiber:round1(r.fiber*basis), sugar:round1(r.sugar*basis), sodium:Math.round(r.sodium*basis),
+      cat:titleCaseCat(f.category), source:f.source||'', confidence:f.confidence||'medium', note:null, kind:'food'
+    };
+    catalog[f.id] = entry; list.push(entry);
+  });
+  RAW_RECIPES.forEach(function(rcp){
+    var totals = {kcal:0,protein:0,carbs:0,fat:0,fiber:0,sugar:0,sodium:0};
+    var missing = false;
+    (rcp.ingredients||[]).forEach(function(ing){
+      var r = rateById[ing.food_id];
+      if(!r){ missing = true; return; }
+      var g = ing.grams||0;
+      totals.kcal += r.kcal*g; totals.protein += r.protein*g; totals.carbs += r.carbs*g;
+      totals.fat += r.fat*g; totals.fiber += r.fiber*g; totals.sugar += r.sugar*g; totals.sodium += r.sodium*g;
+    });
+    var serv = rcp.default_serving || {};
+    var servGrams = serv.grams || 1;
+    var servLabel = serv.label || (servGrams+' g');
+    var entry = {
+      id:rcp.id, name:rcp.name, aliases:(rcp.aliases||[]).slice(),
+      grams:servGrams, label:servLabel, unitGrams:unitGramsFromLabel(servLabel, servGrams),
+      kcal:Math.round(totals.kcal), protein:round1(totals.protein), carbs:round1(totals.carbs),
+      fat:round1(totals.fat), fiber:round1(totals.fiber), sugar:round1(totals.sugar), sodium:Math.round(totals.sodium),
+      cat:titleCaseCat(rcp.category), source:'Baseline resep (recipes.json)'+(missing?' — sebagian bahan tidak ditemukan di foods.json':''),
+      confidence:rcp.confidence||'low', note:rcp.note||null, kind:'recipe'
+    };
+    catalog[rcp.id] = entry; list.push(entry);
+  });
+  return {byId:catalog, list:list};
+}
+var FOOD_CATALOG = buildCatalog();
+var FOOD_DB = FOOD_CATALOG.list;
+/* Resolves free-typed phrases to a catalog entry, following the priority
+   aliases.json itself declares: exact alias match first, then a recipe
+   alias found inside the phrase, then a base-food alias, longest match
+   wins at each stage so e.g. "tempe goreng" prefers the recipe over the
+   bare "tempe" food. */
+function findFoodMatch(phrase){
+  var norm = (phrase||'').toLowerCase().trim().replace(/\s+/g,' ');
+  if(!norm) return null;
+  var exact = ALIASES_DATA.map && ALIASES_DATA.map[norm];
+  if(exact && FOOD_CATALOG.byId[exact.id]) return FOOD_CATALOG.byId[exact.id];
+  var best = null, bestLen = 0;
+  RAW_RECIPES.forEach(function(rcp){
+    (rcp.aliases||[]).forEach(function(a){
+      if(a && norm.indexOf(a)!==-1 && a.length>bestLen){ best = FOOD_CATALOG.byId[rcp.id]; bestLen = a.length; }
+    });
+  });
+  if(best) return best;
+  RAW_FOODS.forEach(function(f){
+    (f.aliases||[]).forEach(function(a){
+      if(a && norm.indexOf(a)!==-1 && a.length>bestLen){ best = FOOD_CATALOG.byId[f.id]; bestLen = a.length; }
+    });
+  });
+  return best;
+}
+
+var BARCODE_DB = [
+  {barcode:'8991002123456', name:'Biskuit Gandum Sereal', grams:30, label:'1 bungkus (~30 g)', kcal:140, protein:2, carbs:20, fat:5, fiber:1.5, sugar:6, sodium:90},
+  {barcode:'8992761123457', name:'Susu Kotak Cokelat 200ml', grams:200, label:'1 kotak (~200 ml)', kcal:180, protein:6, carbs:26, fat:6, fiber:0, sugar:22, sodium:120},
+  {barcode:'8993456123458', name:'Mie Instan Goreng', grams:80, label:'1 bungkus (~80 g)', kcal:380, protein:8, carbs:52, fat:15, fiber:2, sugar:4, sodium:1200},
+  {barcode:'8994567123459', name:'Keripik Singkong Kemasan', grams:50, label:'1 bungkus (~50 g)', kcal:260, protein:2, carbs:28, fat:15, fiber:2, sugar:1, sodium:280},
+  {barcode:'8995678123460', name:'Yogurt Drink 200ml', grams:200, label:'1 botol (~200 ml)', kcal:130, protein:4, carbs:22, fat:2, fiber:0, sugar:18, sodium:70}
+];
+
+var ACTIVITY_TYPES = [
+  {id:'jalan', name:'Jalan santai', met:3.0, icon:'activity', keywords:['jalan santai','jalan kaki','jalan']},
+  {id:'jalan_cepat', name:'Jalan cepat', met:4.3, icon:'activity', keywords:['jalan cepat']},
+  {id:'lari', name:'Lari / jogging', met:7.5, icon:'activity', keywords:['lari','jogging','joging']},
+  {id:'sepeda', name:'Bersepeda', met:6.5, icon:'activity', keywords:['sepeda','gowes']},
+  {id:'renang', name:'Berenang', met:7.0, icon:'activity', keywords:['renang','berenang']},
+  {id:'badminton', name:'Badminton', met:5.5, icon:'activity', keywords:['badminton','bulutangkis']},
+  {id:'futsal', name:'Sepak bola / futsal', met:7.0, icon:'activity', keywords:['futsal','sepak bola','bola']},
+  {id:'basket', name:'Basket', met:6.5, icon:'activity', keywords:['basket']},
+  {id:'voli', name:'Voli', met:4.5, icon:'activity', keywords:['voli']},
+  {id:'yoga', name:'Yoga / senam', met:3.0, icon:'activity', keywords:['yoga','senam']},
+  {id:'gym', name:'Latihan kekuatan', met:5.0, icon:'activity', keywords:['gym','angkat beban','latihan beban','latihan kekuatan']},
+  {id:'tangga', name:'Naik tangga', met:8.0, icon:'activity', keywords:['naik tangga','tangga']},
+  {id:'menari', name:'Menari', met:4.5, icon:'activity', keywords:['menari','dance','nari']},
+  {id:'lainnya', name:'Lainnya', met:4.0, icon:'activity', keywords:[]}
+];
+
+var GOAL_OPTIONS = ['Pola makan lebih beragam','Lebih aktif bergerak','Tidur & hidrasi lebih baik','Sekadar mencatat kebiasaan','Tidak ada tujuan khusus'];
+var PREF_OPTIONS = ['Nasi','Ayam','Ikan','Sayur','Buah','Pedas','Vegetarian','Rendah gula'];
+
+/* =========================================================
+   STATE
+========================================================= */
+var LS_KEY = 'santap_state_v2';
+var LS_VERSION = 3;
+var state = null;
+var storageOK = true;
+var WATER_TARGET_ML = 2000;
+var WATER_QUICK_ML = [150,250,330,500];
+
+function defaultState(){
+  return {
+    version:LS_VERSION,
+    profile:{onboarded:false, age:null, activityLevel:null, prefs:[], allergies:[], goal:null, weightKg:null, theme:'system'},
+    meals:[], activities:[], favorites:[], water:{}, lastPortion:{}, chat:[], customFoods:[],
+    ui:{view:'home', modal:null}
+  };
+}
+
+function mergeObject(base, extra){
+  var out = {};
+  Object.keys(base).forEach(function(k){ out[k]=base[k]; });
+  if(extra && typeof extra==='object'){
+    Object.keys(extra).forEach(function(k){ out[k]=extra[k]; });
+  }
+  return out;
+}
+
+function sanitizeLoadedState(parsed){
+  var d = defaultState();
+  parsed = parsed && typeof parsed==='object' ? parsed : {};
+  var out = mergeObject(d, parsed);
+  out.version = LS_VERSION;
+  out.profile = mergeObject(d.profile, parsed.profile);
+  out.profile.prefs = Array.isArray(out.profile.prefs) ? out.profile.prefs : [];
+  out.profile.allergies = Array.isArray(out.profile.allergies) ? out.profile.allergies : [];
+  out.meals = Array.isArray(out.meals) ? out.meals : [];
+  out.activities = Array.isArray(out.activities) ? out.activities : [];
+  out.favorites = Array.isArray(out.favorites) ? out.favorites : [];
+  out.chat = Array.isArray(out.chat) ? out.chat.slice(-30) : [];
+  out.water = out.water && typeof out.water==='object' ? out.water : {};
+  /* v2 stored water as a "glasses" count (0-8, one fixed cup size). v3 stores
+     ml directly so people can log the amount they actually drank instead of
+     an assumed-equal cup. Convert old counts once, at ~250 ml/glass. */
+  if((!parsed.version || parsed.version<3)){
+    var migratedWater = {};
+    Object.keys(out.water).forEach(function(k){
+      var v = out.water[k];
+      migratedWater[k] = (typeof v==='number' && isFinite(v)) ? Math.round(v*250) : 0;
+    });
+    out.water = migratedWater;
+  }
+  out.lastPortion = out.lastPortion && typeof out.lastPortion==='object' ? out.lastPortion : {};
+  /* User-entered foods not in the built-in database — kept separate and
+     flagged as "Kustom" everywhere they appear, since they haven't been
+     checked against any nutrition source. */
+  out.customFoods = Array.isArray(out.customFoods) ? out.customFoods : [];
+  /* UI is deliberately not persisted: modal/File/SpeechRecognition objects are transient. */
+  out.ui = {view:'home', modal:null};
+  return out;
+}
+
+function loadState(){
+  try{
+    var raw = localStorage.getItem(LS_KEY);
+    if(!raw){
+      /* Migrate the original v1 storage once, if it exists. */
+      raw = localStorage.getItem('santap_state_v1');
+    }
+    if(!raw) return defaultState();
+    return sanitizeLoadedState(JSON.parse(raw));
+  }catch(e){
+    storageOK = false;
+    return defaultState();
+  }
+}
+
+function durableState(){
+  return {
+    version:LS_VERSION,
+    profile:state.profile,
+    meals:state.meals,
+    activities:state.activities,
+    favorites:state.favorites,
+    water:state.water,
+    lastPortion:state.lastPortion,
+    customFoods:state.customFoods,
+    chat:state.chat
+  };
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify(durableState()));
+    storageOK = true;
+  }catch(e){
+    storageOK = false;
+    toast('Data belum tersimpan di perangkat. Periksa izin penyimpanan browser.');
+  }
+}
+
+/* =========================================================
+   UTIL
+========================================================= */
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function pad2(n){ return n<10?('0'+n):(''+n); }
+function todayISO(){ var d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+function isoOf(date){ return date.getFullYear()+'-'+pad2(date.getMonth()+1)+'-'+pad2(date.getDate()); }
+function nowTimeLabel(){ var d=new Date(); return pad2(d.getHours())+':'+pad2(d.getMinutes()); }
+var HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+var BULAN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function dateLongLabel(iso){
+  var parts = iso.split('-'); var d = new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+  return HARI[d.getDay()]+', '+d.getDate()+' '+BULAN[d.getMonth()]+' '+d.getFullYear();
+}
+function greetingWord(){
+  var h = new Date().getHours();
+  if(h<10) return 'Selamat pagi';
+  if(h<15) return 'Selamat siang';
+  if(h<18) return 'Selamat sore';
+  return 'Selamat malam';
+}
+function mealSlotForNow(){
+  var h = new Date().getHours();
+  if(h>=4 && h<10) return 'Sarapan';
+  if(h>=10 && h<15) return 'Makan Siang';
+  if(h>=15 && h<18) return 'Camilan';
+  if(h>=18 && h<22) return 'Makan Malam';
+  return 'Camilan Malam';
+}
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function clamp(n,a,b){ return Math.max(a,Math.min(b,n)); }
+function round1(n){ return Math.round(n*10)/10; }
+
+function toast(msg){
+  var el = document.getElementById('toastEl');
+  if(el) el.remove();
+  el = document.createElement('div');
+  el.id = 'toastEl'; el.className='toast'; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function(){ if(el && el.parentNode) el.remove(); }, 2600);
+}
+
+/* item macro helper: given a db entry and target grams, scale values */
+function scaleFromDb(db, grams){
+  var f = grams / db.grams;
+  return {
+    name: db.name, portionLabel: Math.round(grams)+' g', grams: grams,
+    kcal: Math.round(db.kcal*f), protein: round1(db.protein*f), carbs: round1(db.carbs*f),
+    fat: round1(db.fat*f), fiber: round1(db.fiber*f), sugar: round1(db.sugar*f), sodium: Math.round(db.sodium*f),
+    confidence: db.confidence||'exact', note: db.note||null, dbSource: db.source||null
+  };
+}
+function itemKcalMid(item){
+  if(item.kcal!=null) return item.kcal;
+  if(item.kcalMin!=null && item.kcalMax!=null) return Math.round((item.kcalMin+item.kcalMax)/2);
+  return 0;
+}
+function itemKcalLabel(item){
+  if(item.kcal!=null) return item.kcal+' kkal';
+  if(item.kcalMin!=null && item.kcalMax!=null){
+    if(item.kcalMin===item.kcalMax) return item.kcalMin+' kkal';
+    return '~'+item.kcalMin+'–'+item.kcalMax+' kkal';
+  }
+  return '- kkal';
+}
+function mealTotals(meal){
+  var t = {kcal:0, protein:0, carbs:0, fat:0, fiber:0, sugar:0, sodium:0};
+  (meal.items||[]).forEach(function(it){
+    t.kcal += itemKcalMid(it);
+    t.protein += it.protein||0; t.carbs += it.carbs||0; t.fat += it.fat||0; t.fiber += it.fiber||0;
+    t.sugar += it.sugar||0; t.sodium += it.sodium||0;
+  });
+  return t;
+}
+function dayMeals(iso){ return state.meals.filter(function(m){ return m.dateISO===iso; }).sort(function(a,b){ return a.time<b.time?-1:1; }); }
+function dayActivities(iso){ return state.activities.filter(function(a){ return a.dateISO===iso; }).sort(function(a,b){ return a.time<b.time?-1:1; }); }
+function dayTotals(iso){
+  var t = {kcal:0, protein:0, carbs:0, fat:0, fiber:0, sugar:0, sodium:0};
+  dayMeals(iso).forEach(function(m){ var mt=mealTotals(m); t.kcal+=mt.kcal; t.protein+=mt.protein; t.carbs+=mt.carbs; t.fat+=mt.fat; t.fiber+=mt.fiber; t.sugar+=mt.sugar; t.sodium+=mt.sodium; });
+  return t;
+}
+function dayActivityMinutes(iso){
+  return dayActivities(iso).reduce(function(s,a){ return s+(a.minutes||0); },0);
+}
+function last7Days(){
+  var arr=[]; var d=new Date();
+  for(var i=6;i>=0;i--){ var dd=new Date(d); dd.setDate(d.getDate()-i); arr.push(isoOf(dd)); }
+  return arr;
+}
+
+/* =========================================================
+   AI (sample capability)
+========================================================= */
+var sampleApi = null, sampleLimits = null, sampleReady = false;
+async function initSample(){
+  try{
+    if(window.claude && typeof window.claude.use === 'function'){
+      sampleApi = await window.claude.use('sample');
+      if(sampleApi){
+        try{ sampleLimits = await sampleApi.limits(); }catch(e){ sampleLimits = null; }
+      }
+    }
+  }catch(e){ sampleApi = null; }
+  sampleReady = true;
+}
+function aiErrorMessage(e){
+  var map = {
+    not_granted:'Fitur AI belum diizinkan pada sesi ini.',
+    sampling_disabled:'Fitur AI tidak tersedia untuk akun ini.',
+    not_declared:'Fitur AI tidak tersedia di tampilan ini.',
+    capability_disabled:'Fitur AI sedang tidak dapat digunakan.',
+    capability_removed:'Fitur AI tidak didukung di versi ini.',
+    images_unavailable:'Analisis foto tidak tersedia di tampilan ini.',
+    image_rejected:'Foto tidak dapat diproses. Coba foto lain.',
+    rate_limited:'Terlalu banyak permintaan. Coba lagi sebentar lagi.',
+    session_expired:'Sesi berakhir, silakan muat ulang.',
+    refused:'AI tidak dapat memproses permintaan ini.',
+    empty_completion:'AI tidak memberi jawaban. Coba input yang lebih sederhana.',
+    invalid_json:'Ada kendala membaca hasil AI. Coba lagi.',
+    upstream_error:'Terjadi gangguan sementara. Coba lagi.',
+    cancelled:'Dibatalkan.'
+  };
+  return (e && map[e.code]) || 'Terjadi kendala. Menggunakan estimasi dasar.';
+}
+
+function localParseFoodText(text){
+  var raw = text.toLowerCase();
+  var parts = raw.split(/,| dan | sama |\+|\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+  if(parts.length===0) parts=[raw];
+  var items = [];
+  parts.forEach(function(part){
+    /* Recognize an explicit weight unit anywhere in the phrase (e.g. "nasi 1 kilogram",
+       "ayam 500 gram", "nasi 2 ons") and treat it as an absolute gram amount, rather than
+       only reading a leading count that multiplies the default serving size. This is what
+       let people log a custom kilogram amount of rice/etc. */
+    var gramsOverride = null;
+    var um = part.match(/(\d+([.,]\d+)?)\s*(kilogram|kilo|kg|ons|gram|gr|g)\b/i);
+    if(um){
+      var uval = parseFloat(um[1].replace(',','.'));
+      var uunit = um[3].toLowerCase();
+      if(uunit==='kilogram'||uunit==='kilo'||uunit==='kg') gramsOverride = uval*1000;
+      else if(uunit==='ons') gramsOverride = uval*100;
+      else gramsOverride = uval; /* gram / gr / g */
+      part = (part.slice(0,um.index)+' '+part.slice(um.index+um[0].length)).trim();
+    }
+    var qty = 1; var qm = part.match(/^(\d+([.,]\d+)?)\s*/);
+    if(qm){ qty = parseFloat(qm[1].replace(',','.')); part = part.slice(qm[0].length); }
+    var found = findFoodMatch(part);
+    if(found){
+      /* If the DB's default label already represents more than one piece
+         (e.g. "tahu 2 potong = 60 g"), a typed count must scale from the
+         weight of ONE piece (unitGrams), not from the whole default record —
+         otherwise "1 potong tahu" was coming out as 60 g (the 2-piece
+         default) instead of ~30 g. */
+      var perUnit = found.unitGrams || found.grams;
+      var grams = gramsOverride!=null ? gramsOverride : perUnit*qty;
+      var key = found.id;
+      if(gramsOverride==null && !found.unitGrams && state.lastPortion[key]) grams = state.lastPortion[key]*qty;
+      var it = scaleFromDb(found, grams);
+      it.confidence='medium'; it.source='text';
+      items.push(it);
+    } else if(part.trim()){
+      items.push({name: part.trim().charAt(0).toUpperCase()+part.trim().slice(1), portionLabel:'porsi wajar', grams:100, kcalMin:60,kcalMax:250, protein:0,carbs:0,fat:0,fiber:0,sugar:0,sodium:0, confidence:'low', note:'Tidak ditemukan di database — silakan cari manual atau sesuaikan.', source:'text'});
+    }
+  });
+  return {items:items, overall_confidence:'medium', usedAI:false};
+}
+
+async function aiParseFoodText(text){
+  if(!sampleApi){ return localParseFoodText(text); }
+  var prompt = 'Kamu adalah sistem AI yang mem-parsing deskripsi makanan berbahasa Indonesia menjadi data nutrisi terstruktur untuk aplikasi pencatat nutrisi.\n\n'+
+    'Deskripsi pengguna: "'+text.replace(/"/g,"'")+'"\n\n'+
+    'Tugas:\n1. Pisahkan menjadi item makanan/minuman terpisah.\n'+
+    '2. Perkirakan porsi wajar tiap item dalam gram (pakai satuan umum Indonesia bila disebut: centong, potong, butir, gelas, mangkuk, porsi).\n'+
+    '3. Perkirakan rentang energi (kcal_min, kcal_max, bilangan bulat) dan nutrisi (protein_g, carbs_g, fat_g, fiber_g, sugar_g, sodium_mg).\n'+
+    '4. Beri confidence "high"/"medium"/"low" tiap item berdasar kejelasan deskripsi.\n'+
+    '5. Jika ambigu, isi note singkat.\n\n'+
+    'Balas HANYA JSON valid, tanpa teks lain, persis bentuk ini:\n'+
+    '{"items":[{"name":"","portion_label":"","portion_grams":0,"confidence":"medium","kcal_min":0,"kcal_max":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"note":null}],"overall_confidence":"medium"}';
+  try{
+    var data = await sampleApi.json(prompt, {modelTier:'quick', cache:true});
+    if(!data || !Array.isArray(data.items)) return localParseFoodText(text);
+    var items = data.items.map(function(it){
+      var item = {
+        name: it.name || 'Item', portionLabel: it.portion_label || (it.portion_grams? it.portion_grams+' g':'porsi wajar'),
+        grams: it.portion_grams || 100, kcalMin: it.kcal_min||0, kcalMax: it.kcal_max||(it.kcal_min||0),
+        protein: it.protein_g||0, carbs: it.carbs_g||0, fat: it.fat_g||0, fiber: it.fiber_g||0,
+        sugar: it.sugar_g||0, sodium: it.sodium_mg||0,
+        confidence: it.confidence||'medium', note: it.note||null, source:'text'
+      };
+      return enrichNutritionItem(item);
+    });
+    return {items:items, overall_confidence:data.overall_confidence||'medium', usedAI:true};
+  }catch(e){
+    toast(aiErrorMessage(e));
+    return localParseFoodText(text);
+  }
+}
+
+function checkImageBrightness(file){
+  return new Promise(function(resolve){
+    try{
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function(){
+        try{
+          var w=32,h=32; var canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+          var ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+          var data = ctx.getImageData(0,0,w,h).data;
+          var sum=0,count=0;
+          for(var i=0;i<data.length;i+=4){ sum += (data[i]+data[i+1]+data[i+2])/3; count++; }
+          var avg = sum/count;
+          URL.revokeObjectURL(url);
+          resolve({ok: avg>50, avg:avg});
+        }catch(e){ URL.revokeObjectURL(url); resolve({ok:true}); }
+      };
+      img.onerror = function(){ resolve({ok:true}); };
+      img.src = url;
+    }catch(e){ resolve({ok:true}); }
+  });
+}
+
+async function aiAnalyzePhoto(file){
+  if(!sampleApi || !sampleLimits || !sampleLimits.images){
+    return {error:'unavailable'};
+  }
+  var prompt = 'Kamu adalah sistem AI pengenalan makanan untuk aplikasi pencatat nutrisi. Analisis foto makanan berikut.\n\n'+
+    'Tugas:\n1. Kenali tiap jenis makanan/minuman yang terlihat jelas (boleh lebih dari satu).\n'+
+    '2. Perkirakan porsi tiap item dalam gram, sertakan label porsi natural (contoh: "1 centong (~150 g)").\n'+
+    '3. WAJIB berikan rentang energi (kcal_min, kcal_max, bilangan bulat) dan makronutrien (protein_g, carbs_g, fat_g, fiber_g) — jangan angka tunggal presisi palsu jika tidak yakin.\n'+
+    '4. Beri confidence per item: "high", "medium", atau "low".\n'+
+    '5. Jika foto kurang jelas/gelap/porsi tertutup, isi quality_ok:false dan quality_note singkat.\n'+
+    '6. Jika ada ketidakpastian besar (jumlah minyak, bumbu tersembunyi), sebutkan di uncertainty_summary.\n'+
+    '7. Jika tidak ada makanan yang bisa dikenali, kembalikan items:[] dan jelaskan di uncertainty_summary.\n\n'+
+    'Balas HANYA JSON valid, tanpa teks lain, persis bentuk ini:\n'+
+    '{"quality_ok":true,"quality_note":null,"items":[{"name":"","portion_label":"","portion_grams":0,"confidence":"high","kcal_min":0,"kcal_max":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"note":null}],"overall_confidence":"medium","uncertainty_summary":null}';
+  try{
+    var data = await sampleApi.json(prompt, {images:[file], modelTier:'default', cache:true});
+    if(!data) return {error:'empty'};
+    var items = (data.items||[]).map(function(it){
+      var item = {
+        name: it.name||'Item', portionLabel: it.portion_label||(it.portion_grams? it.portion_grams+' g':'porsi wajar'),
+        grams: it.portion_grams||100, kcalMin: it.kcal_min||0, kcalMax: it.kcal_max||(it.kcal_min||0),
+        protein: it.protein_g||0, carbs: it.carbs_g||0, fat: it.fat_g||0, fiber: it.fiber_g||0,
+        sugar: it.sugar_g||0, sodium: it.sodium_mg||0,
+        confidence: it.confidence||'medium', note: it.note||null, source:'photo'
+      };
+      return enrichNutritionItem(item);
+    });
+    return {items:items, quality_ok: data.quality_ok!==false, quality_note:data.quality_note||null, overall_confidence:data.overall_confidence||'medium', uncertainty_summary:data.uncertainty_summary||null};
+  }catch(e){
+    return {error: e && e.code || 'error', message: aiErrorMessage(e)};
+  }
+}
+
+function enrichNutritionItem(it){
+  var name=(it.name||'').toLowerCase();
+  var db=null;
+  for(var i=0;i<FOOD_DB.length;i++){
+    var d=FOOD_DB[i];
+    if(d.name.toLowerCase()===name || d.aliases.some(function(a){ return name.indexOf(a)!==-1 || a.indexOf(name)!==-1; })){ db=d; break; }
+  }
+  if(!db) return it;
+  var grams=Number(it.grams)||db.grams;
+  var scaled=scaleFromDb(db, grams);
+  scaled.confidence = it.confidence || 'medium';
+  scaled.note = it.note || 'Nilai nutrisi dipadankan dengan database lokal berdasarkan nama makanan; porsi tetap perkiraan.';
+  scaled.source = it.source || 'ai+local-db';
+  return scaled;
+}
+
+function buildDataSummaryForAssistant(){
+  var iso = todayISO();
+  var dt = dayTotals(iso);
+  var meals = dayMeals(iso);
+  var names = [];
+  meals.forEach(function(m){ (m.items||[]).forEach(function(it){ names.push(it.name); }); });
+  var week = last7Days();
+  var daysWithMeals = week.filter(function(d){ return dayMeals(d).length>0; }).length;
+  var actMin = dayActivityMinutes(iso);
+  return 'Hari ini ('+iso+'): '+meals.length+' catatan makan ('+(names.join(', ')||'belum ada')+'), total perkiraan '+Math.round(dt.kcal)+' kkal, protein '+round1(dt.protein)+' g, karbohidrat '+round1(dt.carbs)+' g, lemak '+round1(dt.fat)+' g, serat '+round1(dt.fiber)+' g. Aktivitas hari ini: '+actMin+' menit. Dalam 7 hari terakhir, pengguna mencatat makanan pada '+daysWithMeals+' dari 7 hari.';
+}
+
+async function aiAssistantReply(question){
+  if(!sampleApi){ return {text:'Asisten AI tidak tersedia saat ini di tampilan ini. Kamu tetap bisa memakai fitur pencarian & catatan manual.'}; }
+  var rules = 'Kamu adalah asisten nutrisi dalam aplikasi pencatat makanan & aktivitas bernama Santap. Jawab singkat (maks 4-5 kalimat), ramah, netral, dan edukatif dalam Bahasa Indonesia.\n\n'+
+    'Aturan penting:\n- Jangan mempermalukan pengguna atau menilai makanan sebagai "buruk"/"dosa".\n'+
+    '- Jangan mendorong pembatasan makan ekstrem, melewatkan makan, atau memberi target penurunan berat badan.\n'+
+    '- Jangan memberi diagnosis medis; sarankan konsultasi tenaga kesehatan bila relevan.\n'+
+    '- Fokus pada variasi makanan, nutrisi seimbang, aktivitas, hidrasi, dan kebiasaan sehat umum.\n\n'+
+    'Ringkasan data pengguna:\n'+buildDataSummaryForAssistant();
+  var turns = [{role:'user', content: rules}];
+  var hist = state.chat.slice(-6);
+  hist.forEach(function(m){ turns.push({role:m.role, content:m.content}); });
+  turns.push({role:'user', content: question});
+  try{
+    var res = await sampleApi(turns, {modelTier:'quick', cache:false});
+    return {text: res.text};
+  }catch(e){
+    return {text: aiErrorMessage(e)};
+  }
+}
+
+/* =========================================================
+   RENDER HELPERS
+========================================================= */
+function confidenceBadge(conf){
+  if(conf==='exact') return '';
+  if(conf==='custom') return '<span class="badge badge-custom">Kustom</span>';
+  var label = conf==='high'?'Yakin tinggi':(conf==='low'?'Kurang yakin':'Cukup yakin');
+  var cls = conf==='high'?'badge-high':(conf==='low'?'badge-low':'badge-medium');
+  return '<span class="badge '+cls+'">'+label+'</span>';
+}
+function ringCluster(mealsCount, actMin, waterMl){
+  var mealPct = clamp(mealsCount/4,0,1);
+  var actPct = clamp(actMin/45,0,1);
+  var waterPct = clamp(waterMl/WATER_TARGET_ML,0,1);
+  function arc(r,pct,color){
+    var c = 2*Math.PI*r;
+    var off = c*(1-pct);
+    return '<circle cx="48" cy="48" r="'+r+'" fill="none" stroke="var(--surface-2)" stroke-width="7"/>'+
+      '<circle cx="48" cy="48" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'"/>';
+  }
+  return '<svg viewBox="0 0 96 96">'+arc(42,mealPct,'var(--moss)')+arc(31,actPct,'var(--ochre)')+arc(20,waterPct,'var(--sky)')+'</svg>';
+}
+function insightArc(pct, color){
+  var r=26, c=2*Math.PI*r, off=c*(1-clamp(pct,0,1));
+  return '<svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="'+r+'" fill="none" stroke="var(--surface-2)" stroke-width="6"/>'+
+    '<circle cx="30" cy="30" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'" transform="rotate(-90 30 30)"/></svg>';
+}
+
+/* =========================================================
+   VIEWS
+========================================================= */
+function viewHome(){
+  var iso = todayISO();
+  var meals = dayMeals(iso);
+  var acts = dayActivities(iso);
+  var totals = dayTotals(iso);
+  var actMin = dayActivityMinutes(iso);
+  var waterMl = state.water[iso]||0;
+
+  var macroTargets = {protein:60, carbs:250, fat:65, fiber:28};
+  function macroRow(label,val,target,color){
+    var pct = clamp(val/target,0,1)*100;
+    return '<div class="macro-row"><span>'+label+'</span><div class="macro-track"><div class="macro-fill" style="width:'+pct+'%;background:'+color+'"></div></div><span>'+Math.round(val)+'g</span></div>';
+  }
+
+  var html = '<div class="page home">';
+  html += '<div class="hero-card">';
+  html += '<div class="hero-top"><div class="rings">'+ringCluster(meals.length, actMin, waterMl)+'<div class="rings-center"><strong>'+Math.round(totals.kcal)+'</strong><span>kkal</span></div></div>';
+  html += '<div class="hero-stats">';
+  html += '<div class="hero-stat-row"><span class="hero-stat-label"><span class="dot" style="background:var(--moss)"></span>Makanan</span><span class="hero-stat-val">'+meals.length+' catatan</span></div>';
+  html += '<div class="hero-stat-row"><span class="hero-stat-label"><span class="dot" style="background:var(--ochre)"></span>Aktivitas</span><span class="hero-stat-val">'+actMin+' menit</span></div>';
+  html += '<div class="hero-stat-row"><span class="hero-stat-label"><span class="dot" style="background:var(--sky)"></span>Hidrasi</span><span class="hero-stat-val">'+waterMl+'/'+WATER_TARGET_ML+' ml</span></div>';
+  html += '</div></div>';
+  html += '<div class="macro-bars">'+macroRow('Protein',totals.protein,macroTargets.protein,'var(--moss)')+macroRow('Karbo',totals.carbs,macroTargets.carbs,'var(--ochre)')+macroRow('Lemak',totals.fat,macroTargets.fat,'var(--berry)')+macroRow('Serat',totals.fiber,macroTargets.fiber,'var(--sky)')+'</div><p class="nutrition-note">Bar di atas hanya visual ringkasan, bukan target kalori/makro pribadi.</p>';
+  html += '</div>';
+
+  html += '<div class="hydration-row"><div class="hydration-top"><p class="section-label">Hidrasi hari ini</p><span class="hydration-count">'+waterMl+' / '+WATER_TARGET_ML+' ml</span></div>';
+  html += '<div class="macro-track"><div class="macro-fill" style="width:'+Math.round(clamp(waterMl/WATER_TARGET_ML,0,1)*100)+'%;background:var(--sky)"></div></div>';
+  html += '<div class="cups">';
+  WATER_QUICK_ML.forEach(function(ml){ html += '<button class="cup-btn wide" data-action="addWater" data-ml="'+ml+'">+'+ml+' ml</button>'; });
+  if(waterMl>0) html += '<button class="cup-btn wide ghost" data-action="undoWater">Urungkan</button>';
+  html += '</div>';
+  html += '<div class="water-custom-row"><input class="text-input" type="number" min="1" inputmode="numeric" id="waterCustomInput" placeholder="Jumlah lain (ml)"><button class="mini-btn primary" data-action="addWaterCustom">Tambah</button></div>';
+  html += '<p class="nutrition-note">Setiap orang minum dengan takaran gelas/botol yang beda — tambahkan sesuai jumlah air yang sebenarnya diminum.</p>';
+  html += '</div>';
+
+  html += '<div><div class="section-head"><p class="section-label">Aktivitas hari ini</p><button class="link-btn" data-action="nav" data-view="activity">Lihat semua</button></div>';
+  html += acts.length? activityListHtml(acts.slice(0,3)) : '<div class="empty-note">Belum ada aktivitas tercatat hari ini.</div>';
+  html += '</div>';
+
+  html += '<div><div class="section-head"><p class="section-label">Catatan makan</p><button class="link-btn" data-action="nav" data-view="meals">Lihat semua</button></div>';
+  html += meals.length? mealTimelineHtml(meals) : '<div class="empty-note">Belum ada makanan tercatat. Ketuk tombol + untuk mulai mencatat.</div>';
+  html += '</div>';
+
+  html += '<div class="insight-card"><p class="insight-text">'+homeInsightSentence(iso, meals, acts)+'</p><button class="text-btn" data-action="openChat">Tanya lebih lanjut →</button></div>';
+
+  html += '<div class="quickadd-row">';
+  html += '<button class="quick-chip" data-action="openAddMeal" data-method="photo">'+icon('camera',22)+'Scan</button>';
+  html += '<button class="quick-chip" data-action="openAddMeal" data-method="describe">'+icon('edit3',22)+'Tulis</button>';
+  html += '<button class="quick-chip" data-action="openAddMeal" data-method="voice">'+icon('mic',22)+'Suara</button>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function homeInsightSentence(iso, meals, acts){
+  if(meals.length===0 && acts.length===0) return 'Belum ada catatan hari ini. Mulai dengan mencatat sarapan atau aktivitasmu.';
+  if(acts.length===0) return 'Belum ada aktivitas tercatat hari ini — jalan santai singkat pun bisa dicatat.';
+  var totalMin = dayActivityMinutes(iso);
+  var avgPrev = averagePrevActivityMinutes(iso);
+  if(avgPrev!=null && totalMin>avgPrev*1.15) return 'Aktivitasmu hari ini lebih tinggi dari rata-rata harimu belakangan ini.';
+  if(meals.length>0){
+    var cats = {}; meals.forEach(function(m){ (m.items||[]).forEach(function(it){ var db=findDbByName(it.name); if(db) cats[db.cat]=true; }); });
+    if(!cats['Sayur'] && !cats['Buah']) return 'Sayur atau buah belum tercatat hari ini — bisa jadi ide tambahan untuk makan berikutnya.';
+  }
+  return 'Pola makan dan aktivitasmu hari ini tercatat cukup baik. Terus lanjutkan konsistensinya.';
+}
+function findDbByName(name){
+  var low = (name||'').toLowerCase();
+  for(var i=0;i<FOOD_DB.length;i++){ if(FOOD_DB[i].name.toLowerCase()===low) return FOOD_DB[i]; }
+  return null;
+}
+function averagePrevActivityMinutes(excludeIso){
+  var days = last7Days().filter(function(d){ return d!==excludeIso; });
+  if(days.length===0) return null;
+  var sum = days.reduce(function(s,d){ return s+dayActivityMinutes(d); },0);
+  return sum/days.length;
+}
+
+function activityListHtml(acts){
+  var html = '<div class="list-flat">';
+  acts.forEach(function(a){
+    html += '<div class="card row-between"><div style="display:flex;align-items:center;gap:10px;">'+icon('activity',20,'')+'<div><p style="font-weight:600;font-size:13.5px;">'+escapeHtml(a.label)+'</p><p style="font-size:11.5px;color:var(--ink-faint);">'+a.time+' • '+a.minutes+' menit</p></div></div>'+
+      '<div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--font-d);font-size:13px;color:var(--ink-soft);">~'+a.kcalEst+' kkal</span><button class="mini-btn danger" data-action="deleteActivity" data-id="'+a.id+'">'+icon('trash',14)+'</button></div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function mealTimelineHtml(meals){
+  var html = '<div class="timeline">';
+  meals.forEach(function(m,idx){
+    var totals = mealTotals(m);
+    var foodNames = (m.items||[]).map(function(it){ return it.name; }).join(', ');
+    var expanded = state.ui.expandedMeal===m.id;
+    html += '<div class="tl-item"><div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>';
+    html += '<div class="tl-body"><div class="tl-head" data-action="toggleMeal" data-id="'+m.id+'"><div><p class="tl-time">'+m.time+'</p><p class="tl-slot">'+escapeHtml(m.slot)+'</p><p class="tl-foods">'+escapeHtml(foodNames)+'</p></div><p class="tl-kcal">~'+Math.round(totals.kcal)+' kkal</p></div>';
+    if(expanded){
+      html += '<div class="tl-detail">';
+      (m.items||[]).forEach(function(it){
+        html += '<div class="tl-detail-item"><div><div class="nm">'+escapeHtml(it.name)+'</div><div class="meta">'+escapeHtml(it.portionLabel||'')+' • '+itemKcalLabel(it)+'</div></div>'+confidenceBadge(it.confidence)+'</div>';
+      });
+      html += '<div class="tl-actions"><button class="mini-btn primary" data-action="saveFavorite" data-id="'+m.id+'">'+icon('starOutline',14)+'Simpan favorit</button><button class="mini-btn danger" data-action="deleteMeal" data-id="'+m.id+'">'+icon('trash',14)+'Hapus</button></div>';
+      html += '</div>';
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function viewMeals(){
+  var tab = state.ui.mealsTab || 'today';
+  var iso = todayISO();
+  var list;
+  if(tab==='today') list = dayMeals(iso);
+  else if(tab==='week'){ var days=last7Days(); list=[]; days.forEach(function(d){ list=list.concat(dayMeals(d)); }); }
+  else { var d0=new Date(); var monthList=state.meals.filter(function(m){ var mp=m.dateISO.split('-'); return parseInt(mp[0])===d0.getFullYear() && parseInt(mp[1])===d0.getMonth()+1; }); list=monthList.sort(function(a,b){ return a.dateISO+a.time < b.dateISO+b.time?1:-1; }); }
+  var q = (state.ui.mealsSearch||'').toLowerCase();
+  if(q){
+    list = list.filter(function(m){ return (m.items||[]).some(function(it){ return it.name.toLowerCase().indexOf(q)!==-1; }); });
+  }
+  list = list.slice().sort(function(a,b){ return (a.dateISO+a.time) < (b.dateISO+b.time) ? 1 : -1; });
+
+  var html = '<div class="page">';
+  html += '<h1 style="font-size:20px;">Catatan Makan</h1>';
+  if(state.favorites.length){
+    html += '<div><p class="section-label" style="margin-bottom:8px;">Favorit</p><div class="fav-scroll">';
+    state.favorites.forEach(function(f){
+      html += '<button class="fav-chip" data-action="addFavorite" data-id="'+f.id+'">'+icon('starFilled',14)+escapeHtml(f.name)+'</button>';
+    });
+    html += '</div></div>';
+  }
+  html += '<div class="searchbar">'+icon('search',18)+'<input id="mealsSearchInput" placeholder="Cari makanan..." value="'+escapeHtml(state.ui.mealsSearch||'')+'"></div>';
+  html += '<div class="tabs"><button class="tab-btn'+(tab==='today'?' active':'')+'" data-action="setMealsTab" data-tab="today">Hari ini</button><button class="tab-btn'+(tab==='week'?' active':'')+'" data-action="setMealsTab" data-tab="week">Minggu ini</button><button class="tab-btn'+(tab==='month'?' active':'')+'" data-action="setMealsTab" data-tab="month">Bulan ini</button></div>';
+  if(list.length===0){
+    html += '<div class="empty-note">Tidak ada catatan yang cocok.</div>';
+  } else {
+    html += '<div id="mealsListWrap">'+mealListGrouped(list)+'</div>';
+  }
+  html += '</div>';
+  return html;
+}
+function mealListGrouped(list){
+  var byDate = {};
+  list.forEach(function(m){ (byDate[m.dateISO]=byDate[m.dateISO]||[]).push(m); });
+  var dates = Object.keys(byDate).sort().reverse();
+  var html='';
+  dates.forEach(function(d){
+    html += '<p class="section-label" style="margin:14px 0 8px;">'+ (d===todayISO()? 'Hari ini':dateLongLabel(d)) +'</p>';
+    html += mealTimelineHtml(byDate[d]);
+  });
+  return html;
+}
+
+function viewActivity(){
+  var iso = todayISO();
+  var acts = dayActivities(iso);
+  var sel = state.ui.actSelected;
+  var html = '<div class="page">';
+  html += '<h1 style="font-size:20px;">Aktivitas</h1>';
+  html += '<div><p class="section-label" style="margin-bottom:10px;">Pilih aktivitas</p><div class="act-grid">';
+  ACTIVITY_TYPES.forEach(function(a){
+    html += '<button class="act-tile'+(sel===a.id?' selected':'')+'" data-action="selectActivity" data-id="'+a.id+'">'+icon('activity',22)+'<span>'+a.name+'</span></button>';
+  });
+  html += '</div></div>';
+  if(sel){
+    var dur = state.ui.actDuration||30;
+    html += '<div class="card" style="display:flex;flex-direction:column;gap:12px;">';
+    html += '<span class="field-label">Durasi</span><div class="chip-row">';
+    [15,30,45,60].forEach(function(d){ html += '<button class="dur-chip'+(dur===d?' selected':'')+'" data-action="setActDuration" data-min="'+d+'">'+d+' menit</button>'; });
+    html += '<button class="dur-chip'+(state.ui.actCustom?' selected':'')+'" data-action="setActDurationCustom">Custom</button></div>';
+    if(state.ui.actCustom){
+      html += '<input class="text-input" id="actCustomInput" type="number" min="1" placeholder="Menit" value="'+(state.ui.actDuration||'')+'">';
+    }
+    html += '<p style="font-size:12.5px;color:var(--ink-faint);">Perkiraan aktivitas: ~'+estimateActivityKcal(sel,dur)+' kkal</p>';
+    html += '<button class="btn-primary" data-action="confirmActivity">'+icon('check',18)+'Catat aktivitas</button>';
+    html += '</div>';
+  }
+  html += '<div><span class="field-label">Atau ketik bebas</span><div class="searchbar" style="margin-bottom:8px;"><input id="actFreeInput" placeholder="cth: jalan 45 menit, main badminton 1 jam"></div><button class="btn-secondary" data-action="parseActivityText">Proses</button></div>';
+  html += '<div><div class="section-head"><p class="section-label">Hari ini</p></div>';
+  html += acts.length? activityListHtml(acts) : '<div class="empty-note">Belum ada aktivitas tercatat hari ini.</div>';
+  html += '</div></div>';
+  return html;
+}
+function estimateActivityKcal(activityId, minutes){
+  var act = ACTIVITY_TYPES.find(function(a){ return a.id===activityId; }) || ACTIVITY_TYPES[ACTIVITY_TYPES.length-1];
+  var w = state.profile.weightKg || 60;
+  return Math.round(act.met*3.5*w/200*minutes);
+}
+function parseActivityFreeText(text){
+  var low = text.toLowerCase();
+  var found = null;
+  for(var i=0;i<ACTIVITY_TYPES.length;i++){
+    var a = ACTIVITY_TYPES[i];
+    for(var j=0;j<a.keywords.length;j++){ if(low.indexOf(a.keywords[j])!==-1){ found = a; break; } }
+    if(found) break;
+  }
+  var minutes = 30;
+  var mHour = low.match(/(\d+([.,]\d+)?)\s*jam/);
+  var mMin = low.match(/(\d+)\s*menit/);
+  if(mHour){ minutes = Math.round(parseFloat(mHour[1].replace(',','.'))*60); }
+  else if(mMin){ minutes = parseInt(mMin[1]); }
+  if(!found) found = ACTIVITY_TYPES[ACTIVITY_TYPES.length-1];
+  return {activityId:found.id, label:found.name, minutes:minutes};
+}
+
+function viewInsights(){
+  var days = last7Days();
+  var daysWithMeals = days.filter(function(d){ return dayMeals(d).length>0; }).length;
+  var daysWithAct = days.filter(function(d){ return dayActivities(d).length>0; }).length;
+  var namesThis = new Set(); var namesLast = new Set();
+  days.forEach(function(d){ dayMeals(d).forEach(function(m){ (m.items||[]).forEach(function(it){ namesThis.add(it.name); }); }); });
+  var prevDays=[]; var d0=new Date(); for(var i=13;i>=7;i--){ var dd=new Date(d0); dd.setDate(d0.getDate()-i); prevDays.push(isoOf(dd)); }
+  prevDays.forEach(function(d){ dayMeals(d).forEach(function(m){ (m.items||[]).forEach(function(it){ namesLast.add(it.name); }); }); });
+  var varietyDelta = namesThis.size - namesLast.size;
+  var avgWaterMl = Math.round(days.reduce(function(s,d){ return s+(state.water[d]||0); },0)/7);
+  var todayNutrition = dayTotals(todayISO());
+
+  var mealTimeBuckets = {};
+  days.forEach(function(d){ dayMeals(d).forEach(function(m){ mealTimeBuckets[m.slot]=(mealTimeBuckets[m.slot]||0)+1; }); });
+  var topSlot = Object.keys(mealTimeBuckets).sort(function(a,b){ return mealTimeBuckets[b]-mealTimeBuckets[a]; })[0];
+
+  var html = '<div class="page">';
+  html += '<div class="row-between"><h1 style="font-size:20px;">Wawasan Mingguan</h1><button class="icon-btn" data-action="openChat">'+icon('bot',18)+'</button></div>';
+
+  html += '<div class="insight-metric">'+insightArc(daysWithMeals/7,'var(--moss)')+'<div><h3>Konsistensi makan</h3><p>Kamu mencatat makanan pada '+daysWithMeals+' dari 7 hari minggu ini.</p></div></div>';
+  html += '<div class="insight-metric">'+insightArc(daysWithAct/7,'var(--ochre)')+'<div><h3>Konsistensi aktivitas</h3><p>Aktivitas tercatat pada '+daysWithAct+' dari 7 hari minggu ini.</p></div></div>';
+  html += '<div class="insight-metric">'+insightArc(clamp(namesThis.size/12,0,1),'var(--sky)')+'<div><h3>Variasi makanan</h3><p>'+namesThis.size+' jenis makanan berbeda tercatat minggu ini'+(varietyDelta>0?', meningkat dibanding minggu lalu.':(varietyDelta<0?', sedikit menurun dibanding minggu lalu.':', mirip dengan minggu lalu.'))+'</p></div></div>';
+  html += '<div class="insight-metric">'+insightArc(clamp(avgWaterMl/WATER_TARGET_ML,0,1),'var(--berry)')+'<div><h3>Konsistensi hidrasi</h3><p>Rata-rata '+avgWaterMl+' ml air per hari minggu ini.</p></div></div>';
+  if(topSlot){
+    html += '<div class="empty-note" style="text-align:left;">Sebagian besar makanan dicatat sekitar waktu <strong>'+topSlot+'</strong>.</div>';
+  }
+  html += '<div class="card"><p style="font-weight:700;font-size:14px;">Nutrisi yang tercatat hari ini</p>';
+  html += '<div class="nutrition-grid">';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.protein)+' g</b><span>Protein</span></div>';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.carbs)+' g</b><span>Karbohidrat</span></div>';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.fat)+' g</b><span>Lemak</span></div>';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.fiber)+' g</b><span>Serat</span></div>';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.sugar)+' g</b><span>Gula tercatat</span></div>';
+  html += '<div class="nutrition-card"><b>'+Math.round(todayNutrition.sodium)+' mg</b><span>Natrium tercatat</span></div>';
+  html += '</div><p class="nutrition-note">Angka ini adalah jumlah yang tercatat dari makanan yang kamu masukkan. Ini bukan target pribadi; data makanan dan ukuran porsi tetap memengaruhi ketepatan hasil.</p></div>';
+  html += '</div>';
+  return html;
+}
+
+function viewProfile(){
+  var p = state.profile;
+  var html = '<div class="page">';
+  html += '<h1 style="font-size:20px;">Profil</h1>';
+  html += '<div class="profile-header"><div class="avatar-circle">'+ (p.age? p.age : '🙂') +'</div><div><p style="font-weight:700;font-size:15px;">Halo!</p><p style="font-size:12.5px;color:var(--ink-faint);">'+(p.goal||'Belum ada tujuan diatur')+'</p></div></div>';
+
+  html += '<div><p class="section-label" style="margin-bottom:8px;">Preferensi makanan</p><div class="tag-list">'+(p.prefs.length? p.prefs.map(function(x){return '<span class="tag">'+escapeHtml(x)+'</span>';}).join(''):'<span class="tag">Belum diatur</span>')+'</div></div>';
+  html += '<div><p class="section-label" style="margin-bottom:8px;">Alergi</p><div class="tag-list">'+(p.allergies.length? p.allergies.map(function(x){return '<span class="tag">'+escapeHtml(x)+'</span>';}).join(''):'<span class="tag">Tidak ada dicatat</span>')+'</div></div>';
+
+  html += '<div class="settings-list">';
+  html += '<div class="settings-row"><span class="lbl">Usia</span><span class="val">'+(p.age||'—')+'</span></div>';
+  html += '<div class="settings-row"><span class="lbl">Level aktivitas umum</span><span class="val">'+(p.activityLevel||'—')+'</span></div>';
+  html += '<div class="settings-row"><span class="lbl">Berat badan (opsional)</span><span class="val">'+(p.weightKg? p.weightKg+' kg':'Tidak diisi')+'</span></div>';
+  html += '<button class="settings-row" style="width:100%;border:none;text-align:left;" data-action="editProfile"><span class="lbl">'+icon('edit3',16)+'Edit profil</span>'+icon('chevronRight',16)+'</button>';
+  html += '<button class="settings-row" style="width:100%;border:none;text-align:left;" data-action="openWidgets"><span class="lbl">'+icon('image',16)+'Pratinjau widget</span>'+icon('chevronRight',16)+'</button>';
+  html += '<button class="settings-row" style="width:100%;border:none;text-align:left;" data-action="toggleTheme"><span class="lbl">'+icon('refresh',16)+'Tampilan</span><span class="val">'+(document.documentElement.getAttribute('data-theme')==='dark'?'Gelap':(document.documentElement.getAttribute('data-theme')==='light'?'Terang':'Ikuti sistem'))+'</span></button>';
+  html += '</div>';
+
+  html += '<div class="card"><p style="font-weight:700;font-size:14px;margin-bottom:8px;">Kualitas data</p><p style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;">Database lokal berisi nilai referensi umum. Foto dan AI menghasilkan estimasi, jadi hasil terbaik datang dari nama makanan + ukuran porsi yang jelas. Produk kemasan akan lebih tepat jika barcode/label nutrisinya tersedia.</p></div>';
+
+  html += '<div class="card"><p style="font-weight:700;font-size:14px;margin-bottom:8px;">Status penyimpanan</p><p style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;">'+
+    (storageOK ? '✓ Data tersimpan di penyimpanan lokal browser ini. Menutup halaman atau membuka kembali tidak menghapus catatan.' :
+    '⚠ Penyimpanan lokal browser sedang bermasalah. Catatan bisa hilang setelah halaman ditutup.')+
+    '</p></div>';
+
+  html += '<div class="card"><p style="font-weight:700;font-size:14px;margin-bottom:8px;">Privasi & data</p><ul class="privacy-list">'+
+    '<li>Semua catatan makan & aktivitas disimpan lokal di perangkat/browser ini, bukan di server kami.</li>'+
+    '<li>Jika kamu memakai Scan Foto, Tulis Deskripsi, atau Asisten AI, teks/foto tersebut dikirim ke Claude (Anthropic) untuk dianalisis saat itu juga.</li>'+
+    '<li>Kami tidak menjual data pengguna.</li>'+
+    '<li>Kamu dapat menghapus seluruh data kapan saja lewat tombol di bawah.</li>'+
+    '</ul><button class="mini-btn danger" style="margin-top:12px;" data-action="confirmDeleteAll">'+icon('trash',14)+'Hapus semua data</button></div>';
+
+  html += '<p class="disclaimer">Perkiraan nutrisi & kalori di aplikasi ini bersifat estimasi umum untuk tujuan edukasi, bukan diagnosis medis maupun pengganti konsultasi tenaga kesehatan profesional.</p>';
+  html += '</div>';
+  return html;
+}
+
+function viewWidgets(){
+  var iso = todayISO();
+  var meals = dayMeals(iso); var acts=dayActivities(iso); var tot=dayTotals(iso);
+  var waterMl = state.water[iso]||0;
+  var actMin = dayActivityMinutes(iso);
+  var mealCount = meals.length;
+  var html = '<div class="page widget-page">';
+  html += '<div class="row-between"><button class="icon-btn" data-action="nav" data-view="profile">'+icon('arrowLeft',18)+'</button><h1 style="font-size:18px;">Widget Santap</h1><span style="width:40px;"></span></div>';
+  html += '<div class="widget-status"><div><strong>Widget aktif di dalam Santap</strong><p>Data berubah otomatis setiap kali kamu mencatat makan, aktivitas, atau air.</p></div>'+icon('check',18)+'</div>';
+  html += '<div class="widget-mock widget-live"><div class="widget-head"><h4>Ringkasan Hari Ini</h4><span>LIVE</span></div><div class="widget-kcal"><strong>'+Math.round(tot.kcal)+'</strong><small>kkal tercatat</small></div><div class="widget-actions">';
+  html += '<button data-action="openAddMeal"><span>'+icon('plus',16)+'</span>Tambah makan</button>';
+  html += '<button data-action="nav" data-view="activity"><span>'+icon('activity',16)+'</span>'+actMin+' mnt aktivitas</button>';
+  html += '<button data-action="nav" data-view="meals"><span>'+icon('meals',16)+'</span>'+mealCount+' catatan</button>';
+  html += '<button data-action="addWater" data-ml="250"><span>'+icon('water',16)+'</span>'+waterMl+' ml (+250)</button>';
+  html += '</div></div>';
+  html += '<div class="widget-mock"><h4>Nutrisi Hari Ini</h4><div class="widget-metrics"><button data-action="nav" data-view="insights"><b>'+Math.round(tot.protein)+'g</b><span>Protein</span></button><button data-action="nav" data-view="insights"><b>'+Math.round(tot.carbs)+'g</b><span>Karbo</span></button><button data-action="nav" data-view="insights"><b>'+Math.round(tot.fat)+'g</b><span>Lemak</span></button></div></div>';
+  html += '<div class="widget-mock"><h4>Tujuan Konsistensi</h4><p style="font-size:13px;color:var(--ink-soft);line-height:1.5;">Buka Santap dan lakukan satu tindakan kecil sekarang.</p><button class="btn-primary" data-action="openAddMeal" style="margin-top:4px;">'+icon('plus',17)+' Catat sekarang</button></div>';
+  html += '<div class="widget-note">Di Chrome, halaman ini berfungsi sebagai pusat widget interaktif. Widget yang benar-benar muncul sebagai kotak di layar utama Android membutuhkan aplikasi native; HTML/Chrome tidak dapat membuat widget sistem Android secara langsung.</div>';
+  html += '</div>';
+  return html;
+}
+
+/* =========================================================
+   ADD MEAL MODAL
+========================================================= */
+function modalAddMeal(){
+  var m = state.ui.modal;
+  var step = m.step;
+  var body = '';
+  if(step==='menu'){
+    body += '<div class="method-grid">';
+    body += '<button class="method-tile" data-action="pickMethod" data-method="photo">'+icon('camera',26)+'Scan Foto</button>';
+    body += '<button class="method-tile" data-action="pickMethod" data-method="describe">'+icon('edit3',26)+'Tulis Deskripsi</button>';
+    body += '<button class="method-tile" data-action="pickMethod" data-method="search">'+icon('search',26)+'Cari Makanan</button>';
+    body += '<button class="method-tile" data-action="pickMethod" data-method="voice">'+icon('mic',26)+'Input Suara</button>';
+    body += '<button class="method-tile wide" data-action="pickMethod" data-method="barcode">'+icon('barcode',22)+' Scan Barcode</button>';
+    body += '</div>';
+  } else if(step==='photo'){
+    body += photoStepHtml(m);
+  } else if(step==='describe'){
+    body += '<span class="field-label">Ceritakan apa yang kamu makan</span>';
+    body += '<textarea class="text-input" id="describeInput" placeholder="cth: 2 centong nasi, ayam goreng 1 potong, telur dadar 1">'+escapeHtml(m.data.text||'')+'</textarea>';
+    body += '<button class="btn-primary" data-action="submitDescribe">'+icon('check',18)+'Proses'+'</button>';
+    if(m.data.loading) body += '<div class="loading-row"><div class="spinner"></div>AI sedang menganalisis...</div>';
+  } else if(step==='search'){
+    body += '<div class="searchbar">'+icon('search',18)+'<input id="searchFoodInput" placeholder="Cari nama makanan..." value="'+escapeHtml(m.data.query||'')+'"></div>';
+    body += '<div id="searchResultsWrap">'+searchResultsHtml(m.data.query||'')+'</div>';
+  } else if(step==='customFood'){
+    body += customFoodFormHtml(m);
+  } else if(step==='voice'){
+    body += '<div class="voice-circle'+(m.data.listening?' listening':'')+'" id="voiceCircleBtn" data-action="toggleVoice">'+icon('mic',36)+'</div>';
+    body += '<p class="voice-status">'+(m.data.listening?'Mendengarkan... bicara sekarang':(m.data.transcript?('Hasil: "'+escapeHtml(m.data.transcript)+'"'):'Ketuk untuk mulai bicara'))+'</p>';
+    if(m.data.unsupported) body += '<div class="quality-warn">'+icon('info',18)+'<span>Input suara tidak didukung di tampilan ini.</span></div><button class="btn-secondary" data-action="voiceToDescribe">Lanjut dengan teks</button>';
+    if(m.data.transcript && !m.data.loading){
+      body += '<button class="btn-primary" data-action="submitVoiceTranscript">'+icon('check',18)+'Proses hasil ucapan</button>';
+    }
+    if(m.data.loading) body += '<div class="loading-row"><div class="spinner"></div>AI sedang menganalisis...</div>';
+  } else if(step==='barcode'){
+    if(m.data.scanning){
+      body += '<div class="barcode-camera"><video id="barcodeVideo" autoplay playsinline muted></video><div class="barcode-guide"></div></div>';
+      body += '<p class="voice-status">Arahkan barcode ke kotak. Scanner akan membaca otomatis.</p>';
+      body += '<button class="btn-secondary" data-action="stopBarcodeScanner">Berhenti scan</button>';
+    } else {
+      body += '<button class="btn-primary" data-action="startBarcodeScanner">'+icon('camera',18)+'Buka kamera barcode</button>'; if(m.data.unsupported) body += '<div class="quality-warn">'+icon('info',18)+'<span>Browser ini belum mendukung scanner otomatis. Input nomor barcode tetap tersedia.</span></div>';
+      body += '<span class="field-label">Atau masukkan nomor barcode</span>';
+      body += '<div class="searchbar"><input id="barcodeInput" inputmode="numeric" placeholder="cth: 8991002123456" value="'+escapeHtml(m.data.code||'')+'"></div>';
+      body += '<button class="btn-secondary" data-action="lookupBarcode">Cari produk</button>';
+      if(m.data.notFound) body += '<div class="empty-note">Barcode belum ada di database lokal. Untuk produk nyata, nanti kita sambungkan ke database produk setelah versi dasar stabil.</div>';
+      if(m.data.found){
+        var f = m.data.found;
+        body += '<div class="barcode-result"><div style="flex:1;"><p style="font-weight:700;font-size:14px;">'+escapeHtml(f.name)+'</p><p style="font-size:12px;color:var(--ink-faint);">'+f.label+' • ~'+f.kcal+' kkal</p></div><button class="mini-btn primary" data-action="addBarcodeItem">'+icon('plus',16)+'Tambah</button></div>';
+      }
+    }
+  } else if(step==='review'){
+    body += reviewStepHtml(m);
+  }
+  var titleMap = {menu:'Tambah Makanan', photo:'Scan Foto', describe:'Tulis Deskripsi', search:'Cari Makanan', customFood:'Makanan Kustom', voice:'Input Suara', barcode:'Scan Barcode', review:'Periksa Hasil'};
+  var showBack = step!=='menu';
+  return '<div class="sheet-overlay" data-action="closeModalBg"><div class="sheet"><div class="sheet-handle"></div>'+
+    '<div class="sheet-head">'+(showBack? '<button class="icon-btn" data-action="backMethod">'+icon('arrowLeft',18)+'</button>' : '<span></span>')+
+    '<h2>'+titleMap[step]+'</h2><button class="icon-btn" data-action="closeModal">'+icon('x',18)+'</button></div>'+
+    '<div class="sheet-body">'+body+'</div></div></div>';
+}
+
+function photoStepHtml(m){
+  var d = m.data;
+  var body = '';
+  if(!d.previewUrl){
+    body += '<div class="method-grid"><label class="method-tile" for="photoFileInput">'+icon('camera',26)+'Ambil / Unggah Foto</label></div>';
+    body += '<input type="file" id="photoFileInput" accept="image/*" capture="environment" hidden>';
+    if(!sampleApi || !(sampleLimits && sampleLimits.images)){
+      body += '<div class="quality-warn">'+icon('info',18)+'<span>Analisis foto otomatis belum tersedia di sesi ini. Kamu tetap bisa memakai foto sebagai acuan lalu pilih makanan dari database atau tulis deskripsi.</span></div>';
+    }
+  } else {
+    body += '<div class="photo-preview"><img src="'+d.previewUrl+'"></div>';
+    if(d.qualityWarn){
+      body += '<div class="quality-warn">'+icon('info',18)+'<span>Foto tampak gelap. Hasil analisis mungkin kurang akurat.</span></div>';
+      body += '<div class="chip-row"><button class="mini-btn" data-action="retakePhoto">Ambil Ulang</button><button class="mini-btn primary" data-action="analyzePhotoNow">Lanjutkan Analisis</button></div>';
+    } else if(d.loading){
+      body += '<div class="loading-row"><div class="spinner"></div>AI sedang menganalisis foto...</div>';
+    } else if(!d.analyzed){
+      body += '<div class="chip-row"><button class="mini-btn" data-action="retakePhoto">Ambil Ulang</button>';
+      if(sampleApi && sampleLimits && sampleLimits.images){
+        body += '<button class="mini-btn primary" data-action="analyzePhotoNow">Analisis Foto</button>';
+      } else {
+        body += '<button class="mini-btn primary" data-action="photoToSearch">Pilih Makanan</button>';
+      }
+      body += '</div>';
+      if(!sampleApi || !(sampleLimits && sampleLimits.images)) body += '<button class="btn-secondary" data-action="photoToDescribe">Tulis deskripsi dari foto</button>';
+    }
+  }
+  return body;
+}
+
+function searchResultsHtml(query){
+  var q = query.toLowerCase().trim();
+  var all = FOOD_DB.concat(state.customFoods||[]);
+  var results = all.filter(function(db){
+    if(!q) return true;
+    return db.name.toLowerCase().indexOf(q)!==-1 || db.aliases.some(function(a){ return a.indexOf(q)!==-1; });
+  }).slice(0,20);
+  var html = '';
+  if(results.length===0){
+    html += '<div class="empty-note">Tidak ditemukan. Coba kata kunci lain, atau tambahkan sendiri.</div>';
+  } else {
+    html += '<div class="list-flat" style="margin-top:10px;">';
+    results.forEach(function(db){
+      html += '<button class="card row-between" style="text-align:left;border:none;" data-action="pickSearchItem" data-id="'+db.id+'"><div><p style="font-weight:600;font-size:13.5px;">'+escapeHtml(db.name)+(db.custom?' <span class="badge badge-custom">Kustom</span>':'')+'</p><p style="font-size:11.5px;color:var(--ink-faint);">'+db.label+' • '+db.kcal+' kkal</p></div>'+icon('chevronRight',18)+'</button>';
+    });
+    html += '</div>';
+  }
+  html += '<button class="text-btn" style="margin-top:10px;" data-action="startCustomFood">'+icon('plus',15)+' Tambah makanan sendiri</button>';
+  return html;
+}
+
+function customFoodFormHtml(m){
+  var f = m.data.customForm || (m.data.customForm = {});
+  var html = '';
+  html += '<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:4px;">Masukkan info gizi sesuai label kemasan/sumber yang kamu percaya. Tersimpan di perangkatmu dan selalu ditandai <b>Kustom</b> karena belum diperiksa dari database bawaan — kamu masih bisa sesuaikan porsinya di layar berikutnya.</p>';
+  html += '<span class="field-label">Nama makanan</span><input class="text-input" id="cfName" placeholder="cth: Rendang buatan sendiri" value="'+escapeHtml(f.name||'')+'">';
+  html += '<span class="field-label">Label porsi (opsional)</span><input class="text-input" id="cfPortionLabel" placeholder="cth: 1 porsi (~200 g)" value="'+escapeHtml(f.portionLabel||'')+'">';
+  html += '<div class="field-grid-2">';
+  html += '<div><span class="field-label">Berat porsi (g)</span><input class="text-input" type="number" min="1" id="cfGrams" value="'+(f.grams!=null?f.grams:'')+'"></div>';
+  html += '<div><span class="field-label">Kalori (kkal)</span><input class="text-input" type="number" min="0" id="cfKcal" value="'+(f.kcal!=null?f.kcal:'')+'"></div>';
+  html += '<div><span class="field-label">Protein (g)</span><input class="text-input" type="number" min="0" id="cfProtein" value="'+(f.protein!=null?f.protein:'')+'"></div>';
+  html += '<div><span class="field-label">Karbohidrat (g)</span><input class="text-input" type="number" min="0" id="cfCarbs" value="'+(f.carbs!=null?f.carbs:'')+'"></div>';
+  html += '<div><span class="field-label">Lemak (g)</span><input class="text-input" type="number" min="0" id="cfFat" value="'+(f.fat!=null?f.fat:'')+'"></div>';
+  html += '<div><span class="field-label">Serat (g)</span><input class="text-input" type="number" min="0" id="cfFiber" value="'+(f.fiber!=null?f.fiber:'')+'"></div>';
+  html += '<div><span class="field-label">Gula (g)</span><input class="text-input" type="number" min="0" id="cfSugar" value="'+(f.sugar!=null?f.sugar:'')+'"></div>';
+  html += '<div><span class="field-label">Natrium (mg)</span><input class="text-input" type="number" min="0" id="cfSodium" value="'+(f.sodium!=null?f.sodium:'')+'"></div>';
+  html += '</div>';
+  html += '<button class="btn-primary" data-action="saveCustomFood">'+icon('check',18)+'Simpan & pakai</button>';
+  return html;
+}
+
+function reviewStepHtml(m){
+  var items = m.data.items||[];
+  var body = '';
+  if(m.data.qualityNote){
+    body += '<div class="quality-warn">'+icon('info',18)+'<span>'+escapeHtml(m.data.qualityNote)+'</span></div>';
+  }
+  if(m.data.uncertaintySummary){
+    body += '<div class="review-note">'+escapeHtml(m.data.uncertaintySummary)+'</div>';
+  }
+  if(items.length===0){
+    body += '<div class="empty-note">AI belum yakin mengenali makanan ini. Coba foto/deskripsi lain, atau cari manual.</div>';
+    body += '<button class="btn-secondary" data-action="switchToSearch">'+icon('search',16)+'Cari manual</button>';
+  } else {
+    items.forEach(function(it, idx){
+      body += '<div class="review-item"><div class="review-item-head"><span class="nm">'+escapeHtml(it.name)+'</span>'+confidenceBadge(it.confidence)+'</div>';
+      body += '<div class="row-between"><span style="font-size:12.5px;color:var(--ink-soft);">'+escapeHtml(it.portionLabel||'')+'</span><span class="review-kcal">'+itemKcalLabel(it)+'</span></div>';
+      body += '<div style="font-size:10.5px;color:var(--ink-faint);line-height:1.45;margin-top:4px;">P '+round1(it.protein||0)+' g • K '+round1(it.carbs||0)+' g • L '+round1(it.fat||0)+' g • Serat '+round1(it.fiber||0)+' g • Gula '+round1(it.sugar||0)+' g • Natrium '+Math.round(it.sodium||0)+' mg</div>';
+      if(it.note) body += '<div class="review-note">'+escapeHtml(it.note)+'</div>';
+      if(it.dbSource) body += '<div class="review-note" style="opacity:0.75;">Sumber: '+escapeHtml(it.dbSource)+'</div>';
+      body += portionChipsHtml(it, idx);
+      body += '</div>';
+    });
+    body += '<button class="btn-primary" data-action="confirmAddItems">'+icon('check',18)+'Tambahkan ke catatan ('+items.length+' item)</button>';
+  }
+  return body;
+}
+function portionOptionsFor(item){
+  var base = item.grams || 100;
+  var opts = [Math.round(base*0.66), base, Math.round(base*1.33)];
+  var seen = {}; var uniq=[];
+  opts.forEach(function(g){ if(!seen[g]){ seen[g]=1; uniq.push(g); } });
+  return uniq;
+}
+function portionChipsHtml(item, idx){
+  var opts = portionOptionsFor(item);
+  var key = item.name.toLowerCase();
+  var suggested = state.lastPortion[key];
+  var html = '<div class="portion-chips">';
+  opts.forEach(function(g){
+    var sel = item.grams===g;
+    html += '<button class="portion-chip'+(sel?' selected':'')+(suggested===g?' suggested':'')+'" data-action="setItemPortion" data-idx="'+idx+'" data-grams="'+g+'">'+g+' g</button>';
+  });
+  html += '<button class="portion-chip'+(item.customPortion?' selected':'')+'" data-action="setItemPortionCustom" data-idx="'+idx+'">Custom</button>';
+  html += '</div>';
+  if(item.customPortion){
+    html += '<input class="text-input" type="number" min="1" style="margin-top:8px;" data-action-input="customGrams" data-idx="'+idx+'" value="'+item.grams+'" placeholder="Gram">';
+  }
+  return html;
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+function chatOverlayHtml(){
+  var html = '<div class="chat-overlay">';
+  html += '<div class="chat-head"><button class="icon-btn" data-action="closeModal">'+icon('arrowLeft',18)+'</button><div style="display:flex;align-items:center;gap:8px;">'+icon('bot',22,'')+'<h2 style="font-size:16px;">Asisten Nutrisi</h2></div><span style="width:40px;"></span></div>';
+  html += '<div class="chat-body" id="chatBody">';
+  if(state.chat.length===0){
+    html += '<div class="bubble bot">Halo! Tanyakan apa saja soal pola makan, nutrisi, atau aktivitasmu hari ini.</div>';
+  }
+  state.chat.forEach(function(m){
+    html += '<div class="bubble '+(m.role==='user'?'user':'bot')+'">'+escapeHtml(m.content)+'</div>';
+  });
+  html += '</div>';
+  html += '<div class="chat-suggestions">'+
+    '<button class="sugg-chip" data-action="chatSuggestion" data-q="Apakah makananku hari ini sudah beragam?">Sudah beragam?</button>'+
+    '<button class="sugg-chip" data-action="chatSuggestion" data-q="Kasih ide sarapan sederhana.">Ide sarapan</button>'+
+    '<button class="sugg-chip" data-action="chatSuggestion" data-q="Apa yang kurang dari pola makanku hari ini?">Apa yang kurang?</button>'+
+    '</div>';
+  html += '<div class="chat-inputrow"><input id="chatInput" placeholder="Tulis pertanyaan..."><button class="send-btn" id="chatSendBtn" data-action="chatSend">'+icon('send',18)+'</button></div>';
+  html += '</div>';
+  return html;
+}
+function appendChatBubble(role, text){
+  var bodyEl = document.getElementById('chatBody');
+  if(!bodyEl) return null;
+  var div = document.createElement('div');
+  div.className = 'bubble '+(role==='user'?'user':'bot');
+  div.textContent = text;
+  bodyEl.appendChild(div);
+  bodyEl.scrollTop = bodyEl.scrollHeight;
+  return div;
+}
+
+/* =========================================================
+   ONBOARDING
+========================================================= */
+function viewOnboarding(){
+  var step = state.ui.onbStep||0;
+  var dots = '';
+  for(var i=0;i<4;i++){ dots += '<div class="onb-dot'+(i<=step?' done':'')+'"></div>'; }
+  var body='';
+  if(step===0){
+    body = '<div class="onb-emoji">🥗</div><h1>Selamat datang di Santap</h1><p class="sub">Catat makanan & aktivitasmu secepat mungkin — cukup foto, ketik, atau ucapkan. Kami bantu perkirakan nutrisinya.</p>';
+  } else if(step===1){
+    body = '<h1>Sedikit tentang kamu</h1><p class="sub">Bagian ini opsional dan hanya membantu memberi wawasan yang lebih relevan.</p>';
+    body += '<div><span class="field-label">Usia (opsional)</span><input class="text-input" type="number" id="onbAge" value="'+(state.profile.age||'')+'" placeholder="cth: 24"></div>';
+    body += '<div><span class="field-label">Level aktivitas umum</span><div class="chip-row">';
+    ['Jarang aktif','Cukup aktif','Sangat aktif'].forEach(function(lv){
+      body += '<button class="chip-select'+(state.profile.activityLevel===lv?' selected':'')+'" data-action="setOnbActivity" data-lv="'+lv+'">'+lv+'</button>';
+    });
+    body += '</div></div>';
+  } else if(step===2){
+    body = '<h1>Preferensi makan</h1><p class="sub">Pilih beberapa yang sesuai (opsional).</p>';
+    body += '<div class="chip-row">'+PREF_OPTIONS.map(function(pr){
+      var sel = state.profile.prefs.indexOf(pr)!==-1;
+      return '<button class="chip-select'+(sel?' selected':'')+'" data-action="toggleOnbPref" data-pr="'+pr+'">'+pr+'</button>';
+    }).join('')+'</div>';
+    body += '<div><span class="field-label">Alergi (opsional, pisahkan dengan koma)</span><input class="text-input" id="onbAllergy" value="'+escapeHtml((state.profile.allergies||[]).join(', '))+'" placeholder="cth: kacang, seafood"></div>';
+  } else if(step===3){
+    body = '<h1>Tujuan umum</h1><p class="sub">Ini membantu kami menyesuaikan wawasan, bukan target angka.</p>';
+    body += '<div class="chip-row">'+GOAL_OPTIONS.map(function(g){
+      var sel = state.profile.goal===g;
+      return '<button class="chip-select'+(sel?' selected':'')+'" data-action="setOnbGoal" data-g="'+g+'">'+g+'</button>';
+    }).join('')+'</div>';
+    body += '<div><span class="field-label">Berat badan (opsional)</span><p class="sub" style="margin-bottom:8px;">Hanya dipakai untuk memperhalus perkiraan kalori aktivitas. Jika dilewati, kami pakai asumsi rata-rata umum.</p><input class="text-input" type="number" id="onbWeight" value="'+(state.profile.weightKg||'')+'" placeholder="cth: 60 (opsional)"></div>';
+  }
+  var html = '<div class="onb-wrap"><div class="onb-dots">'+dots+'</div><div class="onb-body">'+body+'</div>';
+  html += '<div class="onb-actions">';
+  if(step>0) html += '<button class="btn-secondary" data-action="onbBack">Kembali</button>';
+  html += '<button class="btn-primary" data-action="onbNext">'+(step===3?'Mulai':'Lanjut')+'</button>';
+  html += '</div>';
+  if(step>0 && step<3) html += '<button class="onb-skip" data-action="onbNext">Lewati</button>';
+  html += '</div>';
+  return html;
+}
+
+/* =========================================================
+   MAIN RENDER
+========================================================= */
+function bottomNav(){
+  var items = [['home','home','Beranda'],['meals','meals','Makan'],['activity','activity','Aktivitas'],['insights','insights','Wawasan'],['profile','profile','Profil']];
+  var html = '<div class="bottomnav">';
+  items.forEach(function(it){
+    var active = state.ui.view===it[0];
+    html += '<button class="nav-btn'+(active?' active':'')+'" data-action="nav" data-view="'+it[0]+'">'+icon(it[1],21)+'<span>'+it[2]+'</span></button>';
+  });
+  html += '</div>';
+  return html;
+}
+function topBar(){
+  if(state.ui.view==='home'){
+    return '<div class="topbar"><div><p class="eyebrow">'+dateLongLabel(todayISO())+'</p><h1 class="greet-h">'+greetingWord()+' 👋</h1></div><button class="icon-btn" data-action="openChat">'+icon('bot',20)+'</button></div>';
+  }
+  return '';
+}
+function mainViewHtml(){
+  switch(state.ui.view){
+    case 'home': return viewHome();
+    case 'meals': return viewMeals();
+    case 'activity': return viewActivity();
+    case 'insights': return viewInsights();
+    case 'profile': return state.ui.showWidgets? viewWidgets() : viewProfile();
+    default: return viewHome();
+  }
+}
+function modalHtml(){
+  var m = state.ui.modal;
+  if(!m) return '';
+  if(m.type==='addMeal') return modalAddMeal();
+  if(m.type==='chat') return chatOverlayHtml();
+  return '';
+}
+
+/* render() used to have no error boundary: any unexpected exception while
+   drawing a view (a bad photo/file result, a corrupted saved item, etc.)
+   left the screen blank/stuck with only a console error, so the person had
+   no way back in except reloading the page. Wrapping it means a broken
+   screen always falls back to a recovery card with a working button. */
+/* =========================================================
+   MODAL <-> BROWSER/HARDWARE BACK BUTTON
+   Without this, opening a tool (the + menu, chat, etc.) never told the
+   browser history about it. So pressing the Android back button (the
+   triangle) didn't just close the sheet — it navigated the whole page
+   back/away, and returning via the recent-apps (square) button often
+   landed on a stuck/blank state. Now opening a modal pushes one history
+   entry, and the back button just closes the modal instead of leaving
+   the app. Closing a modal from inside the app (X button, tapping the
+   backdrop, confirming) goes through the same path so history stays
+   in sync either way. */
+var MODAL_HISTORY_PUSHED = false;
+function pushModalHistoryIfNeeded(wasModalOpenBefore){
+  if(wasModalOpenBefore) return; /* already own a history entry for the open modal */
+  try{ history.pushState({santapModal:true}, document.title, location.href); MODAL_HISTORY_PUSHED = true; }
+  catch(e){ MODAL_HISTORY_PUSHED = false; }
+}
+function closeModalNow(){
+  stopBarcodeScanner();
+  state.ui.modal = null;
+  saveState();
+  render();
+}
+function dismissModal(){
+  if(MODAL_HISTORY_PUSHED){
+    MODAL_HISTORY_PUSHED = false;
+    try{ history.back(); return; }catch(e){ /* fall through */ }
+  }
+  closeModalNow();
+}
+window.addEventListener('popstate', function(){
+  MODAL_HISTORY_PUSHED = false;
+  if(state && state.ui && state.ui.modal){ closeModalNow(); }
+});
+
+function render(){
+  try{
+    renderUnsafe();
+  }catch(err){
+    console.error('Render error:', err);
+    try{
+      var root = document.getElementById('app');
+      root.innerHTML = '<div style="padding:28px 20px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;">'+
+        '<h2 style="font-family:var(--font-d);font-size:18px;">Tampilan bermasalah</h2>'+
+        '<p style="font-size:13.5px;color:var(--ink-soft);max-width:320px;">Ada kendala saat menampilkan layar ini. Catatanmu tetap aman tersimpan di perangkat.</p>'+
+        '<button class="btn-primary" style="width:auto;padding:10px 22px;" id="recoveryCloseBtn">Kembali ke Beranda</button>'+
+        '</div>';
+      var btn = document.getElementById('recoveryCloseBtn');
+      if(btn) btn.onclick = function(){
+        state.ui.modal = null; state.ui.view = 'home';
+        try{ render(); }catch(e2){ location.reload(); }
+      };
+    }catch(e2){ /* last resort: leave existing DOM rather than throw again */ }
+  }
+}
+function renderUnsafe(){
+  var root = document.getElementById('app');
+  if(!state.profile.onboarded){
+    root.innerHTML = viewOnboarding();
+  } else {
+    var showFab = ['home','meals','activity'].indexOf(state.ui.view)!==-1 && !(state.ui.modal);
+    root.innerHTML = '<div class="app-shell">'+topBar()+'<main class="main-scroll" id="mainScroll">'+mainViewHtml()+'</main>'+bottomNav()+
+      (showFab? '<button class="fab" data-action="openAddMeal" aria-label="Tambah makanan">'+icon('plus',26)+'</button>':'')+
+      '</div>'+modalHtml();
+  }
+  if(state.ui.modal && state.ui.modal.type==='chat'){
+    var body = document.getElementById('chatBody'); if(body) body.scrollTop = body.scrollHeight;
+  }
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+function setView(v){ state.ui.view=v; state.ui.modal=null; state.ui.expandedMeal=null; state.ui.showWidgets=false; saveState(); render(); }
+
+var handlers = {
+  nav: function(el){ setView(el.dataset.view); },
+  openAddMeal: function(el){
+    var wasOpen = !!state.ui.modal;
+    state.ui.modal = {type:'addMeal', step:'menu', data:{}};
+    pushModalHistoryIfNeeded(wasOpen);
+    if(el && el.dataset.method){ startMethod(el.dataset.method); }
+    saveState(); render();
+  },
+  pickMethod: function(el){ startMethod(el.dataset.method); },
+  closeModal: function(){ dismissModal(); },
+  closeModalBg: function(e){ if(e.target.classList.contains('sheet-overlay')){ dismissModal(); } },
+  backMethod: function(){
+    var m = state.ui.modal;
+    if(m && m.step==='barcode') stopBarcodeScanner();
+    if(m.step==='review'){ m.step = m.data.prevStep || 'menu'; }
+    else if(m.step==='customFood'){ m.step='search'; }
+    else { m.step='menu'; m.data={}; }
+    render();
+  },
+  toggleMeal: function(el){ var id=el.dataset.id; state.ui.expandedMeal = state.ui.expandedMeal===id? null:id; render(); },
+  deleteMeal: function(el){ state.meals = state.meals.filter(function(m){ return m.id!==el.dataset.id; }); saveState(); toast('Catatan dihapus'); render(); },
+  deleteActivity: function(el){ state.activities = state.activities.filter(function(a){ return a.id!==el.dataset.id; }); saveState(); toast('Aktivitas dihapus'); render(); },
+  saveFavorite: function(el){
+    var meal = state.meals.find(function(m){ return m.id===el.dataset.id; });
+    if(!meal) return;
+    var name = (meal.items||[]).map(function(it){ return it.name; }).join(' + ');
+    state.favorites.push({id:uid(), name:name, items: JSON.parse(JSON.stringify(meal.items))});
+    saveState(); toast('Disimpan ke favorit'); render();
+  },
+  addFavorite: function(el){
+    var fav = state.favorites.find(function(f){ return f.id===el.dataset.id; });
+    if(!fav) return;
+    var meal = {id:uid(), dateISO:todayISO(), time:nowTimeLabel(), slot:mealSlotForNow(), items: JSON.parse(JSON.stringify(fav.items)), source:'favorite'};
+    state.meals.push(meal); saveState(); toast('Ditambahkan dari favorit'); render();
+  },
+  addWater: function(el){
+    var iso = todayISO(); var ml = parseInt(el.dataset.ml)||0;
+    if(ml<=0) return;
+    state.water[iso] = Math.max(0,(state.water[iso]||0)+ml);
+    state.ui.lastWaterStep = ml;
+    saveState(); render();
+  },
+  undoWater: function(){
+    var iso = todayISO(); var step = state.ui.lastWaterStep || 250;
+    state.water[iso] = Math.max(0,(state.water[iso]||0)-step);
+    saveState(); render();
+  },
+  addWaterCustom: function(){
+    var inp = document.getElementById('waterCustomInput');
+    var ml = inp? (parseInt(inp.value)||0) : 0;
+    if(ml<=0){ toast('Masukkan jumlah air dalam ml'); return; }
+    var iso = todayISO();
+    state.water[iso] = Math.max(0,(state.water[iso]||0)+ml);
+    state.ui.lastWaterStep = ml;
+    saveState(); render();
+  },
+  setMealsTab: function(el){ state.ui.mealsTab = el.dataset.tab; render(); },
+  setActivityTabNoop: function(){},
+  selectActivity: function(el){ state.ui.actSelected = el.dataset.id; state.ui.actDuration = state.ui.actDuration||30; render(); },
+  setActDuration: function(el){ state.ui.actDuration = parseInt(el.dataset.min); state.ui.actCustom=false; render(); },
+  setActDurationCustom: function(){ state.ui.actCustom = true; render(); },
+  confirmActivity: function(){
+    var id = state.ui.actSelected; var act = ACTIVITY_TYPES.find(function(a){ return a.id===id; });
+    var minutes = state.ui.actDuration||30;
+    var kcal = estimateActivityKcal(id, minutes);
+    state.activities.push({id:uid(), dateISO:todayISO(), time:nowTimeLabel(), type:id, label:act.name, minutes:minutes, kcalEst:kcal});
+    state.ui.actSelected=null; state.ui.actDuration=null; state.ui.actCustom=false;
+    saveState(); toast('Aktivitas dicatat'); render();
+  },
+  parseActivityText: function(){
+    var input = document.getElementById('actFreeInput');
+    if(!input || !input.value.trim()) return;
+    var parsed = parseActivityFreeText(input.value);
+    var kcal = estimateActivityKcal(parsed.activityId, parsed.minutes);
+    state.activities.push({id:uid(), dateISO:todayISO(), time:nowTimeLabel(), type:parsed.activityId, label:parsed.label, minutes:parsed.minutes, kcalEst:kcal});
+    saveState(); toast('Aktivitas dicatat: '+parsed.label+' '+parsed.minutes+' menit'); render();
+  },
+  openChat: function(){ var wasOpen = !!state.ui.modal; state.ui.modal = {type:'chat'}; pushModalHistoryIfNeeded(wasOpen); render(); },
+  chatSuggestion: function(el){ sendChatMessage(el.dataset.q); },
+  chatSend: function(){
+    var input = document.getElementById('chatInput');
+    if(!input || !input.value.trim()) return;
+    var text = input.value.trim(); input.value='';
+    sendChatMessage(text);
+  },
+  editProfile: function(){ state.profile.onboarded=false; state.ui.onbStep=1; saveState(); render(); },
+  openWidgets: function(){ state.ui.showWidgets=true; render(); },
+  toggleTheme: function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur==='dark'? 'light' : (cur==='light'? null : 'dark');
+    if(next) document.documentElement.setAttribute('data-theme', next); else document.documentElement.removeAttribute('data-theme');
+    try{ localStorage.setItem('santap_theme', next||''); }catch(e){}
+    render();
+  },
+  confirmDeleteAll: function(){ showConfirm('Hapus semua data?', 'Tindakan ini akan menghapus seluruh catatan makan, aktivitas, dan profil dari perangkat ini secara permanen.', function(){
+    try{ localStorage.removeItem(LS_KEY); }catch(e){}
+    state = defaultState(); saveState(); render();
+  }); },
+  retakePhoto: function(){ state.ui.modal.data = {}; render(); },
+  photoToSearch: function(){ state.ui.modal.step='search'; state.ui.modal.data.query=''; render(); },
+  photoToDescribe: function(){ state.ui.modal.step='describe'; state.ui.modal.data.text=''; render(); },
+  voiceToDescribe: function(){ state.ui.modal.step='describe'; state.ui.modal.data.text=state.ui.modal.data.transcript||''; render(); },
+  startBarcodeScanner: function(){ startBarcodeScanner(); },
+  stopBarcodeScanner: function(){ stopBarcodeScanner(); if(state.ui.modal){ state.ui.modal.data.scanning=false; render(); } },
+  analyzePhotoNow: function(){ runPhotoAnalysis(); },
+  submitDescribe: function(){
+    var ta = document.getElementById('describeInput');
+    if(!ta || !ta.value.trim()) return;
+    var text = ta.value.trim();
+    state.ui.modal.data.text = text; state.ui.modal.data.loading = true; render();
+    aiParseFoodText(text).then(function(res){
+      state.ui.modal.data.loading = false;
+      openReview(res.items, {prevStep:'describe'});
+    });
+  },
+  submitVoiceTranscript: function(){
+    var text = state.ui.modal.data.transcript;
+    if(!text) return;
+    state.ui.modal.data.loading = true; render();
+    aiParseFoodText(text).then(function(res){
+      state.ui.modal.data.loading = false;
+      openReview(res.items, {prevStep:'voice'});
+    });
+  },
+  toggleVoice: function(){
+    var d = state.ui.modal.data;
+    if(d.listening){ if(d._rec) try{ d._rec.stop(); }catch(e){} return; }
+    startVoice();
+  },
+  lookupBarcode: function(){
+    var input = document.getElementById('barcodeInput');
+    var code = input? input.value.replace(/\s|-/g,'').trim() : '';
+    state.ui.modal.data.code = code;
+    var found = BARCODE_DB.find(function(b){ return b.barcode===code; });
+    state.ui.modal.data.found = found||null;
+    state.ui.modal.data.notFound = !found;
+    render();
+  },
+  addBarcodeItem: function(){
+    var f = state.ui.modal.data.found;
+    if(!f) return;
+    var item = {name:f.name, portionLabel:f.label, grams:f.grams, kcal:f.kcal, protein:f.protein, carbs:f.carbs, fat:f.fat, fiber:f.fiber, confidence:'exact', source:'barcode'};
+    addItemsAsMeal([item]);
+    saveState(); toast('Ditambahkan ke catatan'); dismissModal();
+  },
+  switchToSearch: function(){ state.ui.modal.step='search'; state.ui.modal.data={}; render(); },
+  startCustomFood: function(){
+    state.ui.modal.step = 'customFood';
+    state.ui.modal.data.customForm = {};
+    render();
+  },
+  saveCustomFood: function(){
+    var f = (state.ui.modal.data && state.ui.modal.data.customForm) || {};
+    var name = (f.name||'').trim();
+    var grams = parseFloat(f.grams)||0;
+    if(!name){ toast('Isi nama makanan dulu'); return; }
+    if(grams<=0){ toast('Isi berat porsi (gram) dulu'); return; }
+    var entry = {
+      id:'custom_'+uid(), name:name, aliases:[name.toLowerCase()],
+      grams:grams, label:(f.portionLabel||'').trim()||(Math.round(grams)+' g'),
+      kcal:Math.max(0,parseFloat(f.kcal)||0), protein:Math.max(0,parseFloat(f.protein)||0),
+      carbs:Math.max(0,parseFloat(f.carbs)||0), fat:Math.max(0,parseFloat(f.fat)||0),
+      fiber:Math.max(0,parseFloat(f.fiber)||0), sugar:Math.max(0,parseFloat(f.sugar)||0),
+      sodium:Math.max(0,parseFloat(f.sodium)||0), cat:'Kustom', custom:true
+    };
+    state.customFoods.push(entry);
+    saveState();
+    var item = scaleFromDb(entry, entry.grams);
+    item.source='custom'; item.confidence='custom';
+    openReview([item], {prevStep:'search'});
+  },
+  pickSearchItem: function(el){
+    var db = FOOD_DB.concat(state.customFoods||[]).find(function(d){ return d.id===el.dataset.id; });
+    if(!db) return;
+    var grams = state.lastPortion[db.id] || db.grams;
+    var item = scaleFromDb(db, grams);
+    item.source='search';
+    if(db.custom) item.confidence='custom';
+    openReview([item], {prevStep:'search'});
+  },
+  setItemPortion: function(el){
+    var idx = parseInt(el.dataset.idx); var grams = parseInt(el.dataset.grams);
+    state.ui.modal.data.items[idx].customPortion = false;
+    updateReviewItemPortion(idx, grams); render();
+  },
+  setItemPortionCustom: function(el){
+    var idx = parseInt(el.dataset.idx);
+    state.ui.modal.data.items[idx].customPortion = true; render();
+  },
+  confirmAddItems: function(){
+    var items = state.ui.modal.data.items;
+    items.forEach(function(it){
+      var key = it.name.toLowerCase();
+      state.lastPortion[key] = it.grams;
+    });
+    addItemsAsMeal(items);
+    saveState(); toast('Ditambahkan ke catatan makan'); dismissModal();
+  },
+  onbNext: function(){
+    var step = state.ui.onbStep||0;
+    if(step===1){
+      var ageEl = document.getElementById('onbAge');
+      if(ageEl && ageEl.value) state.profile.age = parseInt(ageEl.value);
+    }
+    if(step===2){
+      var alEl = document.getElementById('onbAllergy');
+      if(alEl){ state.profile.allergies = alEl.value.split(',').map(function(s){ return s.trim(); }).filter(Boolean); }
+    }
+    if(step===3){
+      var wEl = document.getElementById('onbWeight');
+      if(wEl && wEl.value) state.profile.weightKg = parseFloat(wEl.value);
+      state.profile.onboarded = true;
+      saveState(); render(); return;
+    }
+    state.ui.onbStep = step+1; saveState(); render();
+  },
+  onbBack: function(){ state.ui.onbStep = Math.max(0,(state.ui.onbStep||0)-1); render(); },
+  setOnbActivity: function(el){ state.profile.activityLevel = el.dataset.lv; saveState(); render(); },
+  toggleOnbPref: function(el){
+    var pr = el.dataset.pr; var i = state.profile.prefs.indexOf(pr);
+    if(i===-1) state.profile.prefs.push(pr); else state.profile.prefs.splice(i,1);
+    saveState(); render();
+  },
+  setOnbGoal: function(el){ state.profile.goal = el.dataset.g; saveState(); render(); }
+};
+
+var barcodeStream = null;
+var barcodeScanTimer = null;
+function stopBarcodeScanner(){
+  if(barcodeScanTimer){ cancelAnimationFrame(barcodeScanTimer); barcodeScanTimer=null; }
+  if(barcodeStream){ barcodeStream.getTracks().forEach(function(t){ try{t.stop();}catch(e){} }); barcodeStream=null; }
+}
+async function startBarcodeScanner(){
+  var m=state.ui.modal; if(!m) return;
+  if(!('mediaDevices' in navigator) || !navigator.mediaDevices.getUserMedia){
+    m.data.unsupported=true; render(); return;
+  }
+  if(!('BarcodeDetector' in window)){
+    m.data.unsupported=true; render(); toast('Scanner otomatis belum didukung browser ini. Gunakan input nomor barcode.'); return;
+  }
+  try{
+    var detector = new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});
+    barcodeStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+    m.data.scanning=true; m.data.unsupported=false; render();
+    var video=document.getElementById('barcodeVideo');
+    if(!video){ stopBarcodeScanner(); return; }
+    video.srcObject=barcodeStream; await video.play();
+    var scan=function(){
+      if(!state.ui.modal || state.ui.modal.step!=='barcode' || !state.ui.modal.data.scanning){ stopBarcodeScanner(); return; }
+      detector.detect(video).then(function(codes){
+        if(codes && codes.length){
+          var code=codes[0].rawValue||'';
+          stopBarcodeScanner();
+          state.ui.modal.data.scanning=false; state.ui.modal.data.code=code;
+          state.ui.modal.data.found=BARCODE_DB.find(function(b){return b.barcode===code;})||null;
+          state.ui.modal.data.notFound=!state.ui.modal.data.found;
+          render();
+          if(!state.ui.modal.data.found) toast('Barcode terbaca: '+code+'. Produk belum ada di database lokal.');
+          return;
+        }
+        barcodeScanTimer=requestAnimationFrame(scan);
+      }).catch(function(){ barcodeScanTimer=requestAnimationFrame(scan); });
+    };
+    scan();
+  }catch(e){ stopBarcodeScanner(); m.data.scanning=false; m.data.unsupported=true; render(); toast('Kamera barcode tidak bisa dibuka. Periksa izin kamera.'); }
+}
+
+function startMethod(method){
+  var m = state.ui.modal;
+  m.step = method; m.data = {};
+  if(method==='voice'){
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) m.data.unsupported = true;
+  }
+  render();
+  if(method==='photo'){
+    setTimeout(function(){
+      var input = document.getElementById('photoFileInput');
+      if(input) input.click();
+    },50);
+  }
+}
+
+function itemRateSnapshot(it){
+  var g = it.grams||1;
+  return {
+    kcal: it.kcal!=null? it.kcal/g : null,
+    kcalMin: it.kcalMin!=null? it.kcalMin/g : null,
+    kcalMax: it.kcalMax!=null? it.kcalMax/g : null,
+    protein:(it.protein||0)/g, carbs:(it.carbs||0)/g, fat:(it.fat||0)/g,
+    fiber:(it.fiber||0)/g, sugar:(it.sugar||0)/g, sodium:(it.sodium||0)/g
+  };
+}
+function openReview(items, opts){
+  (items||[]).forEach(function(it){ if(!it._rate) it._rate = itemRateSnapshot(it); });
+  state.ui.modal.step = 'review';
+  state.ui.modal.data = {items:items||[], prevStep:(opts&&opts.prevStep)||'menu', qualityNote:(opts&&opts.qualityNote)||null, uncertaintySummary:(opts&&opts.uncertaintySummary)||null};
+  render();
+}
+/* Recompute macros for a target gram amount from the item's original per-gram
+   rate (captured once in openReview), instead of scaling relative to the
+   previously *rounded* display values. Scaling from rounded numbers on every
+   keystroke (e.g. while typing a custom "1000 g" / 1 kg amount) compounds
+   rounding error and made custom gram/kilogram entry drift to the wrong
+   calories. This keeps every recompute anchored to the original values. */
+function updateReviewItemPortion(idx, grams){
+  var it = state.ui.modal.data.items[idx];
+  if(!it._rate) it._rate = itemRateSnapshot(it);
+  grams = Math.max(1, grams);
+  var r = it._rate;
+  if(r.kcal!=null) it.kcal = Math.round(r.kcal*grams);
+  if(r.kcalMin!=null) it.kcalMin = Math.round(r.kcalMin*grams);
+  if(r.kcalMax!=null) it.kcalMax = Math.round(r.kcalMax*grams);
+  it.protein = round1(r.protein*grams); it.carbs = round1(r.carbs*grams);
+  it.fat = round1(r.fat*grams); it.fiber = round1(r.fiber*grams);
+  it.sugar = round1(r.sugar*grams); it.sodium = Math.round(r.sodium*grams);
+  it.grams = grams; it.portionLabel = grams+' g';
+}
+function addItemsAsMeal(items){
+  var meal = {id:uid(), dateISO:todayISO(), time:nowTimeLabel(), slot:mealSlotForNow(), items:items, source:items[0]&&items[0].source};
+  state.meals.push(meal);
+}
+
+async function runPhotoAnalysis(){
+  var m = state.ui.modal;
+  m.data.loading = true; render();
+  var file = m.data.file;
+  var res = await aiAnalyzePhoto(file);
+  m.data.loading = false;
+  if(res.error){
+    toast(res.message || 'Analisis foto tidak tersedia. Coba Tulis Deskripsi.');
+    m.step = 'describe'; m.data = {};
+    render(); return;
+  }
+  openReview(res.items, {prevStep:'photo', qualityNote: res.quality_ok===false? (res.quality_note||'Foto kurang jelas, hasil mungkin kurang akurat.') : null, uncertaintySummary: res.uncertainty_summary});
+}
+
+function startVoice(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var m = state.ui.modal;
+  if(!SR){ m.data.unsupported = true; render(); return; }
+  try{
+    var rec = new SR();
+    rec.lang = 'id-ID'; rec.interimResults = false; rec.maxAlternatives = 1;
+    m.data.listening = true; m.data._rec = rec; render();
+    rec.onresult = function(e){
+      var text = e.results[0][0].transcript;
+      m.data.listening = false; m.data.transcript = text; render();
+    };
+    rec.onerror = function(){
+      m.data.listening = false; m.data.unsupported = true; render();
+    };
+    rec.onend = function(){ if(m.data.listening){ m.data.listening=false; render(); } };
+    rec.start();
+  }catch(e){
+    m.data.unsupported = true; render();
+  }
+}
+
+async function sendChatMessage(text){
+  state.chat.push({role:'user', content:text});
+  saveState();
+  appendChatBubble('user', text);
+  var thinking = appendChatBubble('bot', 'Mengetik...');
+  var sendBtn = document.getElementById('chatSendBtn');
+  if(sendBtn) sendBtn.disabled = true;
+  var res = await aiAssistantReply(text);
+  if(thinking) thinking.textContent = res.text;
+  state.chat.push({role:'assistant', content:res.text});
+  if(state.chat.length>30) state.chat = state.chat.slice(-30);
+  saveState();
+  if(sendBtn) sendBtn.disabled = false;
+}
+
+function showConfirm(title, msg, onYes){
+  var wrap = document.createElement('div');
+  wrap.className = 'confirm-overlay';
+  wrap.innerHTML = '<div class="confirm-box"><h3>'+escapeHtml(title)+'</h3><p>'+escapeHtml(msg)+'</p><div class="confirm-actions"><button class="btn-secondary" id="confirmNo">Batal</button><button class="btn-primary" id="confirmYes" style="background:var(--berry);">Hapus</button></div></div>';
+  document.body.appendChild(wrap);
+  wrap.querySelector('#confirmNo').onclick = function(){ wrap.remove(); };
+  wrap.querySelector('#confirmYes').onclick = function(){ wrap.remove(); onYes(); };
+  wrap.addEventListener('click', function(e){ if(e.target===wrap) wrap.remove(); });
+}
+
+/* =========================================================
+   EVENT BINDING (delegation)
+========================================================= */
+function initEvents(){
+  document.body.addEventListener('click', function(e){
+    var el = e.target.closest('[data-action]');
+    if(!el) return;
+    var action = el.dataset.action;
+    if(handlers[action]) handlers[action](el, e);
+  });
+  document.body.addEventListener('input', function(e){
+    var el = e.target;
+    if(el.id==='searchFoodInput'){
+      state.ui.modal.data.query = el.value;
+      var wrap = document.getElementById('searchResultsWrap');
+      if(wrap) wrap.innerHTML = searchResultsHtml(el.value);
+    }
+    if(el.id==='mealsSearchInput'){
+      state.ui.mealsSearch = el.value;
+      var listWrap = document.getElementById('mealsListWrap');
+      if(listWrap){
+        var tab = state.ui.mealsTab||'today'; var iso=todayISO(); var list;
+        if(tab==='today') list = dayMeals(iso);
+        else if(tab==='week'){ list=[]; last7Days().forEach(function(d){ list=list.concat(dayMeals(d)); }); }
+        else { var d0=new Date(); list = state.meals.filter(function(m){ var mp=m.dateISO.split('-'); return parseInt(mp[0])===d0.getFullYear() && parseInt(mp[1])===d0.getMonth()+1; }); }
+        var q = el.value.toLowerCase();
+        if(q) list = list.filter(function(m){ return (m.items||[]).some(function(it){ return it.name.toLowerCase().indexOf(q)!==-1; }); });
+        listWrap.innerHTML = list.length? mealListGrouped(list) : '<div class="empty-note">Tidak ada catatan yang cocok.</div>';
+      }
+    }
+    if(el.dataset && el.dataset.actionInput==='customGrams'){
+      var idx = parseInt(el.dataset.idx);
+      var g = parseInt(el.value)||1;
+      updateReviewItemPortion(idx, g);
+    }
+    if(el.id==='actCustomInput'){
+      state.ui.actDuration = parseInt(el.value)||0;
+    }
+    var CF_FIELD_MAP = {cfName:'name', cfPortionLabel:'portionLabel', cfGrams:'grams', cfKcal:'kcal', cfProtein:'protein', cfCarbs:'carbs', cfFat:'fat', cfFiber:'fiber', cfSugar:'sugar', cfSodium:'sodium'};
+    if(CF_FIELD_MAP[el.id] && state.ui.modal && state.ui.modal.data){
+      var f = state.ui.modal.data.customForm || (state.ui.modal.data.customForm={});
+      var key = CF_FIELD_MAP[el.id];
+      f[key] = (key==='name'||key==='portionLabel') ? el.value : (parseFloat(el.value.replace(',','.'))||0);
+    }
+  });
+  document.body.addEventListener('change', function(e){
+    if(e.target.id==='photoFileInput'){
+      var file = e.target.files[0];
+      if(!file) return;
+      var m = state.ui.modal;
+      m.data.file = file;
+      m.data.previewUrl = URL.createObjectURL(file);
+      m.data.analyzed = false;
+      render();
+      checkImageBrightness(file).then(function(res){
+        if(!res.ok){ m.data.qualityWarn = true; render(); }
+        else if(sampleApi && sampleLimits && sampleLimits.images){ runPhotoAnalysis(); }
+        else { render(); }
+      });
+    }
+  });
+  document.body.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && e.target.id==='chatInput'){ e.preventDefault(); handlers.chatSend(); }
+  });
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+function applyStoredTheme(){
+  try{
+    var t = localStorage.getItem('santap_theme');
+    if(t) document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+}
+
+function handleShortcutRoute(){
+  var hash = (location.hash || '').toLowerCase();
+  if(!state || !state.profile || !state.profile.onboarded || !hash) return;
+  state.ui._shortcutMethod = null;
+  if(hash === '#add-food') {
+    state.ui.modal = {type:'addMeal', step:'menu', data:{}};
+  } else if(hash === '#photo-food') {
+    /* Open the add-food sheet first, then trigger the existing photo flow. */
+    state.ui.modal = {type:'addMeal', step:'menu', data:{}};
+    state.ui._shortcutMethod = 'photo';
+  } else if(hash === '#activity') {
+    state.ui.view = 'activity'; state.ui.modal = null;
+  } else if(hash === '#meals') {
+    state.ui.view = 'meals'; state.ui.modal = null;
+  } else { return; }
+  try{ history.replaceState(null, document.title, location.pathname + location.search); }catch(e){ location.hash=''; }
+}
+
+async function init(){
+  state = loadState();
+  applyStoredTheme();
+  handleShortcutRoute();
+  /* Ensure a valid persistent snapshot exists immediately. */
+  saveState();
+  render();
+  initEvents();
+  /* A shortcut can request the existing photo picker flow. */
+  if(state.ui._shortcutMethod === 'photo'){
+    state.ui._shortcutMethod = null;
+    startMethod('photo');
+  }
+  await initSample();
+  if(!state.profile.onboarded) return;
+}
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden' && state) saveState(); });
+window.addEventListener('pagehide', function(){ stopBarcodeScanner(); if(state) saveState(); });
+init();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(err){ console.warn('Santap service worker:', err); });
+  });
+}
+
+})();
+</script>
+</body>
+</html>
