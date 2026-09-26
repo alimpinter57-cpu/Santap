@@ -4,7 +4,7 @@
   "description": "Pencatat makanan, nutrisi, aktivitas, dan hidrasi.",
   "lang": "id-ID",
   "dir": "ltr",
-  "start_url": "./santap-app-3.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
