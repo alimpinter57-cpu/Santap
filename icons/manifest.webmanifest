@@ -1,0 +1,81 @@
+{
+  "name": "Santap — AI Nutrition & Activity Tracker",
+  "short_name": "Santap",
+  "description": "Pencatat makanan, nutrisi, aktivitas, dan hidrasi.",
+  "lang": "id-ID",
+  "dir": "ltr",
+  "start_url": "./santap-app-3.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1F4D3A",
+  "background_color": "#F3F6F1",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tambah Makanan",
+      "short_name": "Tambah",
+      "description": "Catat makanan baru",
+      "url": "./santap-app-3.html#add-food",
+      "icons": [
+        {
+          "src": "./icons/shortcut-add.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Foto Makanan",
+      "short_name": "Foto",
+      "description": "Buka input foto makanan",
+      "url": "./santap-app-3.html#photo-food",
+      "icons": [
+        {
+          "src": "./icons/shortcut-photo.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Aktivitas",
+      "short_name": "Aktivitas",
+      "description": "Catat aktivitas harian",
+      "url": "./santap-app-3.html#activity",
+      "icons": [
+        {
+          "src": "./icons/shortcut-activity.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Catatan Makanan",
+      "short_name": "Makanan",
+      "description": "Lihat catatan makanan",
+      "url": "./santap-app-3.html#meals",
+      "icons": [
+        {
+          "src": "./icons/shortcut-meals.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

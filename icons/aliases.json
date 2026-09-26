@@ -1,0 +1,483 @@
+{
+  "schema_version": "1.0",
+  "rules": {
+    "normalization": [
+      "lowercase",
+      "trim",
+      "collapse_spaces",
+      "remove_optional_hyphen"
+    ],
+    "priority": [
+      "exact_alias",
+      "recipe_alias",
+      "food_alias",
+      "fuzzy_search"
+    ]
+  },
+  "map": {
+    "nasi putih": {
+      "type": "food",
+      "id": "rice_white_cooked"
+    },
+    "nasi": {
+      "type": "food",
+      "id": "rice_white_cooked"
+    },
+    "nasi putih matang": {
+      "type": "food",
+      "id": "rice_white_cooked"
+    },
+    "nasi merah": {
+      "type": "food",
+      "id": "rice_brown_cooked"
+    },
+    "nasi merah matang": {
+      "type": "food",
+      "id": "rice_brown_cooked"
+    },
+    "ketan": {
+      "type": "food",
+      "id": "glutinous_rice_cooked"
+    },
+    "beras ketan matang": {
+      "type": "food",
+      "id": "glutinous_rice_cooked"
+    },
+    "ketan matang": {
+      "type": "food",
+      "id": "glutinous_rice_cooked"
+    },
+    "kentang": {
+      "type": "food",
+      "id": "potato"
+    },
+    "singkong": {
+      "type": "food",
+      "id": "cassava"
+    },
+    "ketela pohon": {
+      "type": "food",
+      "id": "cassava"
+    },
+    "ubi": {
+      "type": "food",
+      "id": "sweet_potato"
+    },
+    "ubi jalar": {
+      "type": "food",
+      "id": "sweet_potato"
+    },
+    "ketela rambat": {
+      "type": "food",
+      "id": "sweet_potato"
+    },
+    "jagung": {
+      "type": "food",
+      "id": "corn"
+    },
+    "terigu": {
+      "type": "food",
+      "id": "wheat_flour"
+    },
+    "tepung": {
+      "type": "food",
+      "id": "wheat_flour"
+    },
+    "tepung terigu": {
+      "type": "food",
+      "id": "wheat_flour"
+    },
+    "ayam": {
+      "type": "food",
+      "id": "chicken_meat"
+    },
+    "daging ayam": {
+      "type": "food",
+      "id": "chicken_meat"
+    },
+    "sapi": {
+      "type": "food",
+      "id": "beef"
+    },
+    "daging sapi": {
+      "type": "food",
+      "id": "beef"
+    },
+    "lele": {
+      "type": "food",
+      "id": "catfish"
+    },
+    "ikan lele": {
+      "type": "food",
+      "id": "catfish"
+    },
+    "bandeng": {
+      "type": "food",
+      "id": "milkfish"
+    },
+    "ikan bandeng": {
+      "type": "food",
+      "id": "milkfish"
+    },
+    "kembung": {
+      "type": "food",
+      "id": "mackerel"
+    },
+    "ikan kembung": {
+      "type": "food",
+      "id": "mackerel"
+    },
+    "tuna": {
+      "type": "food",
+      "id": "tuna"
+    },
+    "ikan tuna": {
+      "type": "food",
+      "id": "tuna"
+    },
+    "udang": {
+      "type": "food",
+      "id": "shrimp"
+    },
+    "cumi": {
+      "type": "food",
+      "id": "squid"
+    },
+    "cumi-cumi": {
+      "type": "food",
+      "id": "squid"
+    },
+    "telur": {
+      "type": "food",
+      "id": "egg_chicken"
+    },
+    "telur ayam": {
+      "type": "food",
+      "id": "egg_chicken"
+    },
+    "telur puyuh": {
+      "type": "food",
+      "id": "egg_quail"
+    },
+    "kedelai": {
+      "type": "food",
+      "id": "soybean"
+    },
+    "kacang kedelai": {
+      "type": "food",
+      "id": "soybean"
+    },
+    "tempe": {
+      "type": "food",
+      "id": "tempe"
+    },
+    "tempeh": {
+      "type": "food",
+      "id": "tempe"
+    },
+    "tempe kedelai": {
+      "type": "food",
+      "id": "tempe"
+    },
+    "tahu": {
+      "type": "food",
+      "id": "tofu"
+    },
+    "tofu": {
+      "type": "food",
+      "id": "tofu"
+    },
+    "kacang tanah": {
+      "type": "food",
+      "id": "peanut"
+    },
+    "peanut": {
+      "type": "food",
+      "id": "peanut"
+    },
+    "bayam": {
+      "type": "food",
+      "id": "spinach"
+    },
+    "kangkung": {
+      "type": "food",
+      "id": "water_spinach"
+    },
+    "kacang panjang": {
+      "type": "food",
+      "id": "long_beans"
+    },
+    "wortel": {
+      "type": "food",
+      "id": "carrot"
+    },
+    "kubis": {
+      "type": "food",
+      "id": "cabbage"
+    },
+    "kol": {
+      "type": "food",
+      "id": "cabbage"
+    },
+    "mentimun": {
+      "type": "food",
+      "id": "cucumber"
+    },
+    "timun": {
+      "type": "food",
+      "id": "cucumber"
+    },
+    "tomat": {
+      "type": "food",
+      "id": "tomato"
+    },
+    "terong": {
+      "type": "food",
+      "id": "eggplant"
+    },
+    "terung": {
+      "type": "food",
+      "id": "eggplant"
+    },
+    "tauge": {
+      "type": "food",
+      "id": "bean_sprout"
+    },
+    "taoge": {
+      "type": "food",
+      "id": "bean_sprout"
+    },
+    "bawang merah": {
+      "type": "food",
+      "id": "shallot"
+    },
+    "bawang putih": {
+      "type": "food",
+      "id": "garlic"
+    },
+    "cabai merah": {
+      "type": "food",
+      "id": "red_chili"
+    },
+    "cabe merah": {
+      "type": "food",
+      "id": "red_chili"
+    },
+    "cabai rawit": {
+      "type": "food",
+      "id": "bird_eye_chili"
+    },
+    "cabe rawit": {
+      "type": "food",
+      "id": "bird_eye_chili"
+    },
+    "kecap manis": {
+      "type": "food",
+      "id": "sweet_soy_sauce"
+    },
+    "kecap": {
+      "type": "food",
+      "id": "sweet_soy_sauce"
+    },
+    "gula": {
+      "type": "food",
+      "id": "sugar"
+    },
+    "gula pasir": {
+      "type": "food",
+      "id": "sugar"
+    },
+    "santan": {
+      "type": "food",
+      "id": "coconut_milk"
+    },
+    "santan kelapa": {
+      "type": "food",
+      "id": "coconut_milk"
+    },
+    "minyak": {
+      "type": "food",
+      "id": "cooking_oil"
+    },
+    "minyak goreng": {
+      "type": "food",
+      "id": "cooking_oil"
+    },
+    "garam": {
+      "type": "food",
+      "id": "salt"
+    },
+    "pisang": {
+      "type": "food",
+      "id": "banana"
+    },
+    "pepaya": {
+      "type": "food",
+      "id": "papaya"
+    },
+    "mangga": {
+      "type": "food",
+      "id": "mango"
+    },
+    "jambu biji": {
+      "type": "food",
+      "id": "guava"
+    },
+    "jambu": {
+      "type": "food",
+      "id": "guava"
+    },
+    "nanas": {
+      "type": "food",
+      "id": "pineapple"
+    },
+    "semangka": {
+      "type": "food",
+      "id": "watermelon"
+    },
+    "jeruk": {
+      "type": "food",
+      "id": "orange"
+    },
+    "nasi goreng": {
+      "type": "recipe",
+      "id": "nasi_goreng"
+    },
+    "nasgor": {
+      "type": "recipe",
+      "id": "nasi_goreng"
+    },
+    "nasi goreng kampung": {
+      "type": "recipe",
+      "id": "nasi_goreng"
+    },
+    "tempe goreng": {
+      "type": "recipe",
+      "id": "tempe_goreng"
+    },
+    "tahu goreng": {
+      "type": "recipe",
+      "id": "tahu_goreng"
+    },
+    "telur dadar": {
+      "type": "recipe",
+      "id": "telur_dadar"
+    },
+    "dadar telur": {
+      "type": "recipe",
+      "id": "telur_dadar"
+    },
+    "telur rebus": {
+      "type": "recipe",
+      "id": "telur_rebus"
+    },
+    "ayam goreng": {
+      "type": "recipe",
+      "id": "ayam_goreng"
+    },
+    "ayam bakar": {
+      "type": "recipe",
+      "id": "ayam_bakar"
+    },
+    "sate ayam": {
+      "type": "recipe",
+      "id": "sate_ayam"
+    },
+    "gado-gado": {
+      "type": "recipe",
+      "id": "gado_gado"
+    },
+    "gado gado": {
+      "type": "recipe",
+      "id": "gado_gado"
+    },
+    "pecel": {
+      "type": "recipe",
+      "id": "pecel"
+    },
+    "sayur asem": {
+      "type": "recipe",
+      "id": "sayur_asem"
+    },
+    "sayur asam": {
+      "type": "recipe",
+      "id": "sayur_asem"
+    },
+    "rawon": {
+      "type": "recipe",
+      "id": "rawon"
+    },
+    "rendang": {
+      "type": "recipe",
+      "id": "rendang"
+    },
+    "rendang sapi": {
+      "type": "recipe",
+      "id": "rendang"
+    },
+    "opor ayam": {
+      "type": "recipe",
+      "id": "opor_ayam"
+    },
+    "opor": {
+      "type": "recipe",
+      "id": "opor_ayam"
+    },
+    "soto ayam": {
+      "type": "recipe",
+      "id": "soto_ayam"
+    },
+    "soto": {
+      "type": "recipe",
+      "id": "soto_ayam"
+    },
+    "mie goreng": {
+      "type": "recipe",
+      "id": "mie_goreng"
+    },
+    "mi goreng": {
+      "type": "recipe",
+      "id": "mie_goreng"
+    },
+    "bakso": {
+      "type": "recipe",
+      "id": "bakso"
+    },
+    "bakso sapi": {
+      "type": "recipe",
+      "id": "bakso"
+    },
+    "pisang goreng": {
+      "type": "recipe",
+      "id": "pisang_goreng"
+    },
+    "es buah": {
+      "type": "recipe",
+      "id": "es_buah_sederhana"
+    },
+    "es buah sederhana": {
+      "type": "recipe",
+      "id": "es_buah_sederhana"
+    },
+    "ayam goreng 1 potong": {
+      "type": "recipe",
+      "id": "ayam_goreng"
+    },
+    "tempe goreng 2 potong": {
+      "type": "recipe",
+      "id": "tempe_goreng"
+    },
+    "telor": {
+      "type": "food",
+      "id": "egg_chicken"
+    },
+    "cabe": {
+      "type": "food",
+      "id": "bird_eye_chili"
+    },
+    "cabai": {
+      "type": "food",
+      "id": "bird_eye_chili"
+    }
+  }
+}

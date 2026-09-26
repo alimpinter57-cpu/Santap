@@ -1,0 +1,877 @@
+[
+  {
+    "id": "rice_white_cooked",
+    "name": "Nasi putih matang",
+    "aliases": [
+      "nasi putih",
+      "nasi"
+    ],
+    "category": "karbohidrat",
+    "basis_g": 100,
+    "kcal": 130,
+    "protein": 2.7,
+    "carbs": 28.2,
+    "fat": 0.3,
+    "fiber": 0.4,
+    "sugar": 0.1,
+    "sodium": 1,
+    "source": "TKPI / starter normalization",
+    "confidence": "high"
+  },
+  {
+    "id": "rice_brown_cooked",
+    "name": "Nasi merah matang",
+    "aliases": [
+      "nasi merah"
+    ],
+    "category": "karbohidrat",
+    "basis_g": 100,
+    "kcal": 123,
+    "protein": 2.7,
+    "carbs": 25.6,
+    "fat": 1.0,
+    "fiber": 1.6,
+    "sugar": 0.2,
+    "sodium": 1,
+    "source": "TKPI / starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "glutinous_rice_cooked",
+    "name": "Ketan matang",
+    "aliases": [
+      "ketan",
+      "beras ketan matang"
+    ],
+    "category": "karbohidrat",
+    "basis_g": 100,
+    "kcal": 169,
+    "protein": 3.5,
+    "carbs": 37.0,
+    "fat": 0.3,
+    "fiber": 0.5,
+    "sugar": 0.1,
+    "sodium": 1,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "potato",
+    "name": "Kentang",
+    "aliases": [
+      "kentang"
+    ],
+    "category": "umbi",
+    "basis_g": 100,
+    "kcal": 77,
+    "protein": 2.0,
+    "carbs": 17.5,
+    "fat": 0.1,
+    "fiber": 2.2,
+    "sugar": 0.8,
+    "sodium": 6,
+    "source": "TKPI / starter normalization",
+    "confidence": "high"
+  },
+  {
+    "id": "cassava",
+    "name": "Singkong",
+    "aliases": [
+      "singkong",
+      "ketela pohon"
+    ],
+    "category": "umbi",
+    "basis_g": 100,
+    "kcal": 160,
+    "protein": 1.4,
+    "carbs": 38.1,
+    "fat": 0.3,
+    "fiber": 1.8,
+    "sugar": 1.7,
+    "sodium": 14,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "sweet_potato",
+    "name": "Ubi jalar",
+    "aliases": [
+      "ubi",
+      "ubi jalar",
+      "ketela rambat"
+    ],
+    "category": "umbi",
+    "basis_g": 100,
+    "kcal": 86,
+    "protein": 1.6,
+    "carbs": 20.1,
+    "fat": 0.1,
+    "fiber": 3.0,
+    "sugar": 4.2,
+    "sodium": 55,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "corn",
+    "name": "Jagung",
+    "aliases": [
+      "jagung"
+    ],
+    "category": "karbohidrat",
+    "basis_g": 100,
+    "kcal": 86,
+    "protein": 3.3,
+    "carbs": 18.7,
+    "fat": 1.4,
+    "fiber": 2.0,
+    "sugar": 6.3,
+    "sodium": 15,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "wheat_flour",
+    "name": "Tepung terigu",
+    "aliases": [
+      "terigu",
+      "tepung"
+    ],
+    "category": "karbohidrat",
+    "basis_g": 100,
+    "kcal": 364,
+    "protein": 10.3,
+    "carbs": 76.3,
+    "fat": 1.0,
+    "fiber": 2.7,
+    "sugar": 0.3,
+    "sodium": 2,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "chicken_meat",
+    "name": "Daging ayam",
+    "aliases": [
+      "ayam",
+      "daging ayam"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 165,
+    "protein": 18.2,
+    "carbs": 0,
+    "fat": 9.2,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 74,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "beef",
+    "name": "Daging sapi",
+    "aliases": [
+      "sapi",
+      "daging sapi"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 217,
+    "protein": 26.1,
+    "carbs": 0,
+    "fat": 12.0,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 55,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "catfish",
+    "name": "Ikan lele",
+    "aliases": [
+      "lele",
+      "ikan lele"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 105,
+    "protein": 18.7,
+    "carbs": 0,
+    "fat": 2.9,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 50,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "milkfish",
+    "name": "Ikan bandeng",
+    "aliases": [
+      "bandeng",
+      "ikan bandeng"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 148,
+    "protein": 17.1,
+    "carbs": 0,
+    "fat": 8.0,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 60,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "mackerel",
+    "name": "Ikan kembung",
+    "aliases": [
+      "kembung",
+      "ikan kembung"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 167,
+    "protein": 21.3,
+    "carbs": 0,
+    "fat": 8.4,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 90,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "tuna",
+    "name": "Ikan tuna",
+    "aliases": [
+      "tuna",
+      "ikan tuna"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 132,
+    "protein": 28.0,
+    "carbs": 0,
+    "fat": 1.3,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 47,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "shrimp",
+    "name": "Udang",
+    "aliases": [
+      "udang"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 85,
+    "protein": 20.0,
+    "carbs": 0,
+    "fat": 0.5,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 111,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "squid",
+    "name": "Cumi",
+    "aliases": [
+      "cumi",
+      "cumi-cumi"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 92,
+    "protein": 15.6,
+    "carbs": 3.1,
+    "fat": 1.4,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 44,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "egg_chicken",
+    "name": "Telur ayam",
+    "aliases": [
+      "telur",
+      "telur ayam"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 143,
+    "protein": 12.6,
+    "carbs": 0.7,
+    "fat": 9.5,
+    "fiber": 0,
+    "sugar": 0.4,
+    "sodium": 142,
+    "source": "Starter normalization",
+    "confidence": "high"
+  },
+  {
+    "id": "egg_quail",
+    "name": "Telur puyuh",
+    "aliases": [
+      "telur puyuh"
+    ],
+    "category": "protein hewani",
+    "basis_g": 100,
+    "kcal": 158,
+    "protein": 13.1,
+    "carbs": 0.4,
+    "fat": 11.1,
+    "fiber": 0,
+    "sugar": 0.4,
+    "sodium": 141,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "soybean",
+    "name": "Kedelai",
+    "aliases": [
+      "kedelai",
+      "kacang kedelai"
+    ],
+    "category": "kacang",
+    "basis_g": 100,
+    "kcal": 446,
+    "protein": 36.5,
+    "carbs": 30.2,
+    "fat": 19.9,
+    "fiber": 9.3,
+    "sugar": 7.3,
+    "sodium": 2,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "tempe",
+    "name": "Tempe kedelai",
+    "aliases": [
+      "tempe",
+      "tempeh"
+    ],
+    "category": "protein nabati",
+    "basis_g": 100,
+    "kcal": 193,
+    "protein": 20.3,
+    "carbs": 7.6,
+    "fat": 10.8,
+    "fiber": 3.9,
+    "sugar": 0,
+    "sodium": 9,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "tofu",
+    "name": "Tahu",
+    "aliases": [
+      "tahu",
+      "tofu"
+    ],
+    "category": "protein nabati",
+    "basis_g": 100,
+    "kcal": 80,
+    "protein": 10.0,
+    "carbs": 2.0,
+    "fat": 4.0,
+    "fiber": 0.4,
+    "sugar": 0.5,
+    "sodium": 10,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "peanut",
+    "name": "Kacang tanah",
+    "aliases": [
+      "kacang tanah",
+      "peanut"
+    ],
+    "category": "kacang",
+    "basis_g": 100,
+    "kcal": 567,
+    "protein": 25.8,
+    "carbs": 16.1,
+    "fat": 49.2,
+    "fiber": 8.5,
+    "sugar": 4.7,
+    "sodium": 18,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "spinach",
+    "name": "Bayam",
+    "aliases": [
+      "bayam"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 23,
+    "protein": 2.9,
+    "carbs": 3.6,
+    "fat": 0.4,
+    "fiber": 2.2,
+    "sugar": 0.4,
+    "sodium": 79,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "water_spinach",
+    "name": "Kangkung",
+    "aliases": [
+      "kangkung"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 29,
+    "protein": 3.0,
+    "carbs": 5.4,
+    "fat": 0.3,
+    "fiber": 2.0,
+    "sugar": 0.4,
+    "sodium": 44,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "long_beans",
+    "name": "Kacang panjang",
+    "aliases": [
+      "kacang panjang"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 47,
+    "protein": 2.8,
+    "carbs": 8.4,
+    "fat": 0.4,
+    "fiber": 3.7,
+    "sugar": 3.3,
+    "sodium": 4,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "carrot",
+    "name": "Wortel",
+    "aliases": [
+      "wortel"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 41,
+    "protein": 0.9,
+    "carbs": 9.6,
+    "fat": 0.2,
+    "fiber": 2.8,
+    "sugar": 4.7,
+    "sodium": 69,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "cabbage",
+    "name": "Kubis",
+    "aliases": [
+      "kubis",
+      "kol"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 25,
+    "protein": 1.3,
+    "carbs": 5.8,
+    "fat": 0.1,
+    "fiber": 2.5,
+    "sugar": 3.2,
+    "sodium": 18,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "cucumber",
+    "name": "Mentimun",
+    "aliases": [
+      "mentimun",
+      "timun"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 15,
+    "protein": 0.7,
+    "carbs": 3.6,
+    "fat": 0.1,
+    "fiber": 0.5,
+    "sugar": 1.7,
+    "sodium": 2,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "tomato",
+    "name": "Tomat",
+    "aliases": [
+      "tomat"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 18,
+    "protein": 0.9,
+    "carbs": 3.9,
+    "fat": 0.2,
+    "fiber": 1.2,
+    "sugar": 2.6,
+    "sodium": 5,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "eggplant",
+    "name": "Terong",
+    "aliases": [
+      "terong",
+      "terung"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 25,
+    "protein": 1.0,
+    "carbs": 6.0,
+    "fat": 0.2,
+    "fiber": 3.0,
+    "sugar": 3.2,
+    "sodium": 2,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "bean_sprout",
+    "name": "Tauge",
+    "aliases": [
+      "tauge",
+      "taoge"
+    ],
+    "category": "sayur",
+    "basis_g": 100,
+    "kcal": 30,
+    "protein": 3.0,
+    "carbs": 5.9,
+    "fat": 0.2,
+    "fiber": 1.8,
+    "sugar": 4.1,
+    "sodium": 6,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "shallot",
+    "name": "Bawang merah",
+    "aliases": [
+      "bawang merah"
+    ],
+    "category": "bumbu",
+    "basis_g": 100,
+    "kcal": 72,
+    "protein": 2.5,
+    "carbs": 16.8,
+    "fat": 0.1,
+    "fiber": 3.2,
+    "sugar": 7.9,
+    "sodium": 12,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "garlic",
+    "name": "Bawang putih",
+    "aliases": [
+      "bawang putih"
+    ],
+    "category": "bumbu",
+    "basis_g": 100,
+    "kcal": 149,
+    "protein": 6.4,
+    "carbs": 33.1,
+    "fat": 0.5,
+    "fiber": 2.1,
+    "sugar": 1.0,
+    "sodium": 17,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "red_chili",
+    "name": "Cabai merah",
+    "aliases": [
+      "cabai merah",
+      "cabe merah"
+    ],
+    "category": "bumbu",
+    "basis_g": 100,
+    "kcal": 40,
+    "protein": 1.9,
+    "carbs": 8.8,
+    "fat": 0.4,
+    "fiber": 1.5,
+    "sugar": 5.3,
+    "sodium": 7,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "bird_eye_chili",
+    "name": "Cabai rawit",
+    "aliases": [
+      "cabai rawit",
+      "cabe rawit"
+    ],
+    "category": "bumbu",
+    "basis_g": 100,
+    "kcal": 40,
+    "protein": 2.0,
+    "carbs": 9.5,
+    "fat": 0.4,
+    "fiber": 1.5,
+    "sugar": 5.0,
+    "sodium": 9,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "sweet_soy_sauce",
+    "name": "Kecap manis",
+    "aliases": [
+      "kecap manis",
+      "kecap"
+    ],
+    "category": "bumbu",
+    "basis_g": 100,
+    "kcal": 240,
+    "protein": 5.0,
+    "carbs": 55.0,
+    "fat": 0.0,
+    "fiber": 0,
+    "sugar": 50.0,
+    "sodium": 1100,
+    "source": "Recipe/product estimate",
+    "confidence": "low"
+  },
+  {
+    "id": "sugar",
+    "name": "Gula pasir",
+    "aliases": [
+      "gula",
+      "gula pasir"
+    ],
+    "category": "pemanis",
+    "basis_g": 100,
+    "kcal": 387,
+    "protein": 0,
+    "carbs": 100,
+    "fat": 0,
+    "fiber": 0,
+    "sugar": 100,
+    "sodium": 1,
+    "source": "Standard ingredient",
+    "confidence": "high"
+  },
+  {
+    "id": "coconut_milk",
+    "name": "Santan",
+    "aliases": [
+      "santan",
+      "santan kelapa"
+    ],
+    "category": "lemak",
+    "basis_g": 100,
+    "kcal": 230,
+    "protein": 2.3,
+    "carbs": 5.5,
+    "fat": 23.8,
+    "fiber": 2.2,
+    "sugar": 3.3,
+    "sodium": 15,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "cooking_oil",
+    "name": "Minyak goreng",
+    "aliases": [
+      "minyak",
+      "minyak goreng"
+    ],
+    "category": "lemak",
+    "basis_g": 100,
+    "kcal": 884,
+    "protein": 0,
+    "carbs": 0,
+    "fat": 100,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 0,
+    "source": "Standard ingredient",
+    "confidence": "high"
+  },
+  {
+    "id": "salt",
+    "name": "Garam",
+    "aliases": [
+      "garam"
+    ],
+    "category": "bumbu",
+    "basis_g": 1,
+    "kcal": 0,
+    "protein": 0,
+    "carbs": 0,
+    "fat": 0,
+    "fiber": 0,
+    "sugar": 0,
+    "sodium": 393,
+    "source": "Standard ingredient",
+    "confidence": "high"
+  },
+  {
+    "id": "banana",
+    "name": "Pisang",
+    "aliases": [
+      "pisang"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 89,
+    "protein": 1.1,
+    "carbs": 22.8,
+    "fat": 0.3,
+    "fiber": 2.6,
+    "sugar": 12.2,
+    "sodium": 1,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "papaya",
+    "name": "Pepaya",
+    "aliases": [
+      "pepaya"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 43,
+    "protein": 0.5,
+    "carbs": 10.8,
+    "fat": 0.3,
+    "fiber": 1.7,
+    "sugar": 7.8,
+    "sodium": 8,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "mango",
+    "name": "Mangga",
+    "aliases": [
+      "mangga"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 60,
+    "protein": 0.8,
+    "carbs": 15.0,
+    "fat": 0.4,
+    "fiber": 1.6,
+    "sugar": 13.7,
+    "sodium": 1,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "guava",
+    "name": "Jambu biji",
+    "aliases": [
+      "jambu biji",
+      "jambu"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 68,
+    "protein": 2.6,
+    "carbs": 14.3,
+    "fat": 1.0,
+    "fiber": 5.4,
+    "sugar": 8.9,
+    "sodium": 2,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "pineapple",
+    "name": "Nanas",
+    "aliases": [
+      "nanas"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 50,
+    "protein": 0.5,
+    "carbs": 13.1,
+    "fat": 0.1,
+    "fiber": 1.4,
+    "sugar": 9.9,
+    "sodium": 1,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "watermelon",
+    "name": "Semangka",
+    "aliases": [
+      "semangka"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 30,
+    "protein": 0.6,
+    "carbs": 7.6,
+    "fat": 0.2,
+    "fiber": 0.4,
+    "sugar": 6.2,
+    "sodium": 1,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  },
+  {
+    "id": "orange",
+    "name": "Jeruk",
+    "aliases": [
+      "jeruk"
+    ],
+    "category": "buah",
+    "basis_g": 100,
+    "kcal": 47,
+    "protein": 0.9,
+    "carbs": 11.8,
+    "fat": 0.1,
+    "fiber": 2.4,
+    "sugar": 9.4,
+    "sodium": 0,
+    "source": "Starter normalization",
+    "confidence": "medium"
+  }
+]
