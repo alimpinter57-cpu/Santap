@@ -29,7 +29,7 @@
       "name": "Tambah Makanan",
       "short_name": "Tambah",
       "description": "Catat makanan baru",
-      "url": "./santap-app-3.html#add-food",
+      "url": "./index.html#add-food",
       "icons": [
         {
           "src": "./icons/shortcut-add.png",
@@ -42,7 +42,7 @@
       "name": "Foto Makanan",
       "short_name": "Foto",
       "description": "Buka input foto makanan",
-      "url": "./santap-app-3.html#photo-food",
+      "url": "./index.html#photo-food",
       "icons": [
         {
           "src": "./icons/shortcut-photo.png",
@@ -55,7 +55,7 @@
       "name": "Aktivitas",
       "short_name": "Aktivitas",
       "description": "Catat aktivitas harian",
-      "url": "./santap-app-3.html#activity",
+      "url": "./index.html#activity",
       "icons": [
         {
           "src": "./icons/shortcut-activity.png",
@@ -68,7 +68,7 @@
       "name": "Catatan Makanan",
       "short_name": "Makanan",
       "description": "Lihat catatan makanan",
-      "url": "./santap-app-3.html#meals",
+      "url": "./index.html#meals",
       "icons": [
         {
           "src": "./icons/shortcut-meals.png",
